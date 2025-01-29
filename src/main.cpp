@@ -5,6 +5,7 @@
 #include <iostream>
 
 void error_callback(int error, const char* description);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 void error_callback(int error, const char* description){
@@ -14,6 +15,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }
 
 int main(void)
@@ -33,7 +38,9 @@ int main(void)
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -42,12 +49,7 @@ int main(void)
     }  
 
     glfwSwapInterval(1);
-
     glfwSetKeyCallback(window, key_callback);
-
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
 
     while (!glfwWindowShouldClose(window))
     {
