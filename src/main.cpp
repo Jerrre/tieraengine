@@ -21,7 +21,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
-
 int create_default_shader_program(){
     const char *vertexShaderSrc  = 
         "#version 330 core\n"
@@ -32,7 +31,7 @@ int create_default_shader_program(){
         "#version 330 core\n"
         "out vec4 FragColor;\n"
         "void main(){\n"
-        "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);}\0";
+        "FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);}\0";
 
     unsigned int vertexShader, fragmentShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -101,7 +100,6 @@ int main(void)
         return -1;
     }  
 
-    glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
 
     float vertices[] = 
@@ -110,19 +108,28 @@ int main(void)
         0.0f, 0.5f, 0.0f
  };
 
-    unsigned int VBO;
+    unsigned int defaultShader = create_default_shader_program();
+
+    unsigned int VBO, VAO;
     glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    unsigned int defaultShader;
-    defaultShader = create_default_shader_program();
-    glUseProgram(defaultShader);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
+    
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(defaultShader);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
