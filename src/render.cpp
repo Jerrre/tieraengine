@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "render.h"
 
 void error_callback(int error, const char* description){
