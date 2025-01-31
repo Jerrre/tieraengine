@@ -14,6 +14,7 @@ add_subdirectory(external/glad)
 
 set( fpsgl_source
         main.cpp
+        render.cpp
         )
 
 add_executable( fpsgl ${fpsgl_source} )

@@ -1,11 +1,9 @@
-#define GLFW_INCLUDE_NONE
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include "render.h"
 
 int main(void)
 {
-    init_window(640, 480, "fpsgl");
+    Render rd;
+    rd.init_window(640, 480, "fpsgl");
     
     float vertices[] = {
          0.5f,  0.5f, 0.0f,  // top right
@@ -18,27 +16,15 @@ int main(void)
         1, 2, 3   // second Triangle
     };
 
-    create_mesh(vertices, sizeof(vertices), indices, sizeof(indices));
-    
-    Color white;
-    white.r = 1.0;
-    white.g = 1.0;
-    white.b = 1.0;
-    white.a = 1.0;
+    rd.create_mesh(vertices, sizeof(vertices), indices, sizeof(indices));
 
-    Color test;
-    test.r = 0.2;
-    test.g = 0.5;
-    test.b = 1.0;
-    test.a = 1.0;
-
-    while (!window_should_close())
+    while (!rd.window_should_close())
     {
-        clear_background(test);
-        draw(white);
+        rd.clear_background(rd.BLACK);
+        rd.draw(rd.WHITE);
     }
 
-    close_window();
+    rd.close_window();
 
     return 0;
 }
