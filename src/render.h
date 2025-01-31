@@ -1,5 +1,14 @@
 #include <iostream>
 
+struct Color{
+    float r;
+    float g;
+    float b;
+    float a;
+};
+
+#define WHITE = Color(1.0, 1.0, 1.0, 1.0);
+
 GLFWwindow* window;
 unsigned int VBO, VAO, EBO, shaderProgram;
 
@@ -22,8 +31,8 @@ void close_window();
 /*--------------------*/
 void create_default_shader_program();
 void create_mesh(float vertices[], int vertexCount, unsigned int indices[], int indexCount);
-void clear_background(float r, float g, float b, float a);
-void draw();
+void clear_background(Color color);
+void draw(Color color);
 
 
 void error_callback(int error, const char* description){
@@ -87,8 +96,9 @@ void create_default_shader_program(){
     const char *fragmentShaderSrc = 
         "#version 330 core\n"
         "out vec4 FragColor;\n"
+        "uniform vec4 newColor;\n"
         "void main(){\n"
-        "FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);}\0";
+        "FragColor = newColor;}\0";
 
     unsigned int vertexShader, fragmentShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -144,12 +154,14 @@ void create_mesh(float vertices[], int vertexCount, unsigned int indices[], int 
 
     glBindVertexArray(0);
 }
-void clear_background(float r, float g, float b, float a){
-    glClearColor(r, g, b, a);
+void clear_background(Color color){
+    glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
-void draw(){
+void draw(Color color){
+    int vertexColorLoc = glGetUniformLocation(shaderProgram, "newColor");
     glUseProgram(shaderProgram);
+    glUniform4f(vertexColorLoc, color.r, color.g, color.b, color.a);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     //glDrawArrays(GL_TRIANGLES, 0, 3);

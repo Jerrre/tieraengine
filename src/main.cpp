@@ -20,10 +20,22 @@ int main(void)
 
     create_mesh(vertices, sizeof(vertices), indices, sizeof(indices));
     
+    Color white;
+    white.r = 1.0;
+    white.g = 1.0;
+    white.b = 1.0;
+    white.a = 1.0;
+
+    Color test;
+    test.r = 0.2;
+    test.g = 0.5;
+    test.b = 1.0;
+    test.a = 1.0;
+
     while (!window_should_close())
     {
-        clear_background(0.2f, 0.3f, 0.3f, 1.0f);
-        draw();
+        clear_background(test);
+        draw(white);
     }
 
     close_window();
