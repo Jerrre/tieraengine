@@ -11,16 +11,18 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(external/glfw-3.4)
 add_subdirectory(external/glad)
+add_subdirectory(external/stb_image)
 
 set( fpsgl_source
         main.cpp
+        render.cpp
         )
 
 add_executable( fpsgl ${fpsgl_source} )
 
 target_sources(fpsgl PRIVATE ${fpsgl_source})
 
-target_link_libraries(fpsgl PRIVATE OpenGL::GL glfw glad)
+target_link_libraries(fpsgl PRIVATE OpenGL::GL glfw glad stb_image)
 
 target_include_directories(fpsgl PUBLIC
                           "${PROJECT_BINARY_DIR}"
