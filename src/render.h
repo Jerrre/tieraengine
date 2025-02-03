@@ -11,6 +11,10 @@ struct Color{
     float b;
     float a;
 };
+struct Image{
+    int width, height, nrChannels;
+    unsigned char* data;
+};
 
 /*--------------------*/
 /* CALLBACK FUNCTIONS */
@@ -26,6 +30,7 @@ class Render {
 
         const Color WHITE = {1.0, 1.0, 1.0, 1.0};
         const Color BLACK = {0.0, 0.0, 0.0, 1.0};
+        const Color RED   = {1.0, 0.0, 0.0, 1.0};
 
         /*-----------------*/
         /* WINDOW HANDLING */
@@ -37,6 +42,8 @@ class Render {
         /*--------------------*/
         /* MODELS AND DRAWING */
         /*--------------------*/
+        Image load_image(const char *path);
+        void create_texture(Image img);
         void create_mesh(float vertices[], int vertexCount, unsigned int indices[], int indexCount);
         void clear_background(Color color);
         void draw(Color color);
@@ -44,7 +51,7 @@ class Render {
     private:
 
         GLFWwindow* window;
-        unsigned int VBO, VAO, EBO, shaderProgram;
+        unsigned int VBO, VAO, EBO, shaderProgram, texture;
         
         void create_default_shader_program();
 
