@@ -55,6 +55,7 @@ void Render::close_window(){
 Image Render::load_image(const char *path)
 {
     Image img = {0};
+    stbi_set_flip_vertically_on_load(true);
     img.data = stbi_load(path, &img.width, &img.height, &img.nrChannels, 0);
     if (!img.data){
         std::cout << "Failed to load texture" << std::endl;
