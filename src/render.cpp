@@ -68,6 +68,7 @@ Image Render::load_image(const char *path)
 void Render::create_texture(Image img)
 {
     glGenTextures(1, &texture);
+    glActiveTexture(GL_TEXTURE0); // active texture unit 0, only needed if shader has multiple textures
     glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -80,7 +81,7 @@ void Render::create_texture(Image img)
     stbi_image_free(img.data);
 
     glUseProgram(shaderProgram);
-    glUniform1i(glGetUniformLocation(shaderProgram, "newTexture"), 0);
+    set_default_shader_texture(0); // activate texture unit 0 in the shader
 }
 
 void Render::create_mesh(float vertices[], int vertexCount, unsigned int indices[], int indexCount)
@@ -110,9 +111,8 @@ void Render::clear_background(Color color){
     glClear(GL_COLOR_BUFFER_BIT);
 }
 void Render::draw(Color color){
-    int vertexColorLoc = glGetUniformLocation(shaderProgram, "newColor");
-    glUniform4f(vertexColorLoc, color.r, color.g, color.b, color.a);
 
+    set_default_shader_color(color);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -131,8 +131,9 @@ void Render::create_default_shader_program(){
         "layout (location = 0) in vec3 aPos;\n"
         "layout (location = 1) in vec2 aTexCoord;\n"
         "out vec2 TexCoord;\n"
+        "uniform mat4 transform;\n"
         "void main(){\n"
-        "gl_Position = vec4(aPos, 1.0);\n"
+        "gl_Position = transform*vec4(aPos, 1.0);\n"
         "TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
         "}\0";
     const char *fragmentShaderSrc = 
@@ -179,4 +180,19 @@ void Render::create_default_shader_program(){
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+}
+
+void Render::set_default_shader_color(Color color)
+{
+    glUniform4f(glGetUniformLocation(shaderProgram, "newColor"), color.r, color.g, color.b, color.a);
+}
+
+void Render::set_default_shader_texture(unsigned int texUnit)
+{
+    glUniform1i(glGetUniformLocation(shaderProgram, "newTexture"), texUnit);
+}
+
+void Render::set_default_shader_transform(glm::mat4 transform)
+{
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 }
