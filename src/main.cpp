@@ -17,11 +17,9 @@ int main(void)
         1, 2, 3  // second triangle
     };
 
-    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
     glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-    vec = trans * vec;
-    std::cout << vec.x << vec.y << vec.z << std::endl;
+    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
     rd.create_mesh(vertices, sizeof(vertices), indices, sizeof(indices));
     Image img = rd.load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
@@ -31,6 +29,7 @@ int main(void)
     {
         rd.clear_background(rd.BLACK);
         rd.draw(rd.WHITE);
+        rd.set_default_shader_transform(trans);
     }
 
     rd.close_window();
