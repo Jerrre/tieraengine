@@ -53,7 +53,7 @@ class Render {
         void create_mesh(float vertices[], int vertexCount, unsigned int indices[], int indexCount);
         void clear_background(Color color);
         void draw(Color color);
-        void set_default_shader_transform(glm::mat4 transform);
+        void Render::set_default_shader_matrices(glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection);
 
     private:
 

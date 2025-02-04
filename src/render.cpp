@@ -132,8 +132,11 @@ void Render::create_default_shader_program(){
         "layout (location = 1) in vec2 aTexCoord;\n"
         "out vec2 TexCoord;\n"
         "uniform mat4 transform;\n"
+        "uniform mat4 model;\n"
+        "uniform mat4 view;\n"
+        "uniform mat4 projection;\n"
         "void main(){\n"
-        "gl_Position = transform*vec4(aPos, 1.0);\n"
+        "gl_Position = projection * view * model *vec4(aPos, 1.0);\n"
         "TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
         "}\0";
     const char *fragmentShaderSrc = 
@@ -192,7 +195,10 @@ void Render::set_default_shader_texture(unsigned int texUnit)
     glUniform1i(glGetUniformLocation(shaderProgram, "newTexture"), texUnit);
 }
 
-void Render::set_default_shader_transform(glm::mat4 transform)
+void Render::set_default_shader_matrices(glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 }
