@@ -64,11 +64,19 @@ int main(void)
     rd.create_mesh(vertices, sizeof(vertices), indices, sizeof(indices));
     Image img = rd.load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
     rd.create_texture(img);
+
+    model = glm::translate(model, glm::vec3(1.0f, 2.0f, -1.0f));
     
     while (!rd.window_should_close())
     {
         rd.clear_background(rd.BLACK);
         rd.draw(rd.WHITE);
+
+        for (int i = 0; i < 10; i++){
+            float angle = (3.0f/10000)*i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
+        }
+
         rd.set_default_shader_matrices(trans, model, view, proj);
     }
 
