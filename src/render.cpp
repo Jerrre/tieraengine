@@ -42,6 +42,7 @@ void Render::init_window(int width, int heigth, const char *name){
     glfwSetKeyCallback(window, key_callback);
 
     create_default_shader_program();
+    glEnable(GL_DEPTH_TEST);
 
 }
 int Render::window_should_close(){
@@ -108,7 +109,7 @@ void Render::create_mesh(float vertices[], int vertexCount, unsigned int indices
 }
 void Render::clear_background(Color color){
     glClearColor(color.r, color.g, color.b, color.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Render::draw(Color color){
 
@@ -118,8 +119,8 @@ void Render::draw(Color color){
 
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
