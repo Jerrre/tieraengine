@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "mesh.h"
+
 #include <iostream>
 
 struct Color{
@@ -50,15 +52,14 @@ class Render {
         /*--------------------*/
         Image load_image(const char *path);
         void create_texture(Image img);
-        void create_mesh(float vertices[], int vertexCount, unsigned int indices[], int indexCount);
         void clear_background(Color color);
         void draw(Color color);
         void Render::set_default_shader_matrices(glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection);
-
+        unsigned int shaderProgram, texture;
     private:
 
         GLFWwindow* window;
-        unsigned int VBO, VAO, EBO, shaderProgram, texture;
+        unsigned int VBO, VAO, EBO;
         
         void create_default_shader_program();
         void set_default_shader_color(Color color);

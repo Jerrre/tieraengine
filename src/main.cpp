@@ -7,49 +7,99 @@ int main(void)
     width = 640;
     height = 480;
     rd.init_window(width, height, "fpsgl");
-    float vertices[] = {
-    -0.5f,-0.5f,-0.5f, 0.0f, 0.0f,
- 0.5f,-0.5f,-0.5f, 1.0f, 0.0f,
- 0.5f, 0.5f,-0.5f, 1.0f, 1.0f,
- 0.5f, 0.5f,-0.5f, 1.0f, 1.0f,
-0.5f, 0.5f,-0.5f, 0.0f,1.0f,
--0.5f,-0.5f,-0.5f, 0.0f,0.0f,
--0.5f,-0.5f, 0.5f, 0.0f,0.0f,
- 0.5f,-0.5f, 0.5f, 1.0f,0.0f,
- 0.5f, 0.5f, 0.5f, 1.0f,1.0f,
- 0.5f, 0.5f, 0.5f, 1.0f,1.0f,
- -0.5f, 0.5f, 0.5f, 0.0f,1.0f,
- -0.5f,-0.5f, 0.5f, 0.0f,0.0f,
- -0.5f, 0.5f, 0.5f, 1.0f,0.0f,
- -0.5f, 0.5f,-0.5f, 1.0f,1.0f,
- -0.5f,-0.5f,-0.5f, 0.0f,1.0f,
- -0.5f,-0.5f,-0.5f, 0.0f,1.0f,
- -0.5f,-0.5f, 0.5f, 0.0f,0.0f,
- -0.5f, 0.5f, 0.5f, 1.0f,0.0f,
- 0.5f, 0.5f, 0.5f, 1.0f,0.0f,
- 0.5f, 0.5f,-0.5f, 1.0f,1.0f,
- 0.5f,-0.5f,-0.5f, 0.0f,1.0f,
- 0.5f,-0.5f,-0.5f, 0.0f,1.0f,
- 0.5f,-0.5f, 0.5f, 0.0f,0.0f,
- 0.5f, 0.5f, 0.5f, 1.0f,0.0f,
- -0.5f,-0.5f,-0.5f, 0.0f,1.0f,
- 0.5f,-0.5f,-0.5f, 1.0f,1.0f,
- 0.5f,-0.5f, 0.5f, 1.0f,0.0f,
- 0.5f,-0.5f, 0.5f, 1.0f,0.0f,
- -0.5f,-0.5f, 0.5f, 0.0f,0.0f,
- -0.5f,-0.5f,-0.5f, 0.0f,1.0f,
- -0.5f, 0.5f,-0.5f, 0.0f,1.0f,
- 0.5f, 0.5f,-0.5f, 1.0f,1.0f,
- 0.5f, 0.5f, 0.5f, 1.0f,0.0f,
- 0.5f, 0.5f, 0.5f, 1.0f,0.0f,
- -0.5f, 0.5f, 0.5f, 0.0f,0.0f,
- -0.5f, 0.5f,-0.5f, 0.0f,1.0f
+    float vertex_arr[] = {
+        -0.5f,-0.5f,-0.5f, 
+        0.5f,-0.5f,-0.5f, 
+        0.5f, 0.5f,-0.5f, 
+        0.5f, 0.5f,-0.5f, 
+        0.5f, 0.5f,-0.5f, 
+        -0.5f,-0.5f,-0.5f,
+        -0.5f,-0.5f, 0.5f,
+        0.5f,-0.5f, 0.5f, 
+        0.5f, 0.5f, 0.5f, 
+        0.5f, 0.5f, 0.5f, 
+        -0.5f, 0.5f, 0.5f,
+        -0.5f,-0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f,-0.5f,
+        -0.5f,-0.5f,-0.5f,
+        -0.5f,-0.5f,-0.5f,
+        -0.5f,-0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f, 
+        0.5f, 0.5f,-0.5f, 
+        0.5f,-0.5f,-0.5f, 
+        0.5f,-0.5f,-0.5f, 
+        0.5f,-0.5f, 0.5f, 
+        0.5f, 0.5f, 0.5f, 
+        -0.5f,-0.5f,-0.5f,
+        0.5f,-0.5f,-0.5f, 
+        0.5f,-0.5f, 0.5f, 
+        0.5f,-0.5f, 0.5f, 
+        -0.5f,-0.5f, 0.5f,
+        -0.5f,-0.5f,-0.5f,
+        -0.5f, 0.5f,-0.5f,
+        0.5f, 0.5f,-0.5f, 
+        0.5f, 0.5f, 0.5f, 
+        0.5f, 0.5f, 0.5f, 
+        -0.5f, 0.5f, 0.5f,
+        -0.5f, 0.5f,-0.5f
+ };
+    float tex_arr[] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        1.0f, 1.0f,
+        0.0f,1.0f,
+        0.0f,0.0f,
+        0.0f,0.0f,
+        1.0f,0.0f,
+        1.0f,1.0f,
+        1.0f,1.0f,
+        0.0f,1.0f,
+        0.0f,0.0f,
+        1.0f,0.0f,
+        1.0f,1.0f,
+        0.0f,1.0f,
+        0.0f,1.0f,
+        0.0f,0.0f,
+        1.0f,0.0f,
+        1.0f,0.0f,
+        1.0f,1.0f,
+        0.0f,1.0f,
+        0.0f,1.0f,
+        0.0f,0.0f,
+        1.0f,0.0f,
+        0.0f,1.0f,
+        1.0f,1.0f,
+        1.0f,0.0f,
+        1.0f,0.0f,
+        0.0f,0.0f,
+        0.0f,1.0f,
+        0.0f,1.0f,
+        1.0f,1.0f,
+        1.0f,0.0f,
+        1.0f,0.0f,
+        0.0f,0.0f,
+        0.0f,1.0f
  };
     unsigned int indices[] = {
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
     };
 
+    Mesh mesh;
+
+    for (int i=0; i<sizeof(vertex_arr); i+=3)
+    {
+        mesh.vertices.push_back(glm::vec3(vertex_arr[i], vertex_arr[i+1], vertex_arr[i+2]));
+    }
+    for (int i=0; i<sizeof(tex_arr); i+=2)
+    {
+        mesh.texCoords.push_back(glm::vec2(tex_arr[i], tex_arr[i+1]));
+    }
+
+    mesh.genMesh();
 
     glm::mat4 trans = glm::mat4(1.0f);
 
@@ -61,7 +111,6 @@ int main(void)
 
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
-    rd.create_mesh(vertices, sizeof(vertices), indices, sizeof(indices));
     Image img = rd.load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
     rd.create_texture(img);
 
@@ -70,7 +119,8 @@ int main(void)
     while (!rd.window_should_close())
     {
         rd.clear_background(rd.BLACK);
-        rd.draw(rd.WHITE);
+        mesh.draw(rd.shaderProgram, rd.texture);
+
 
         for (int i = 0; i < 10; i++){
             float angle = (3.0f/10000)*i;
@@ -78,6 +128,8 @@ int main(void)
         }
 
         rd.set_default_shader_matrices(trans, model, view, proj);
+        rd.draw(rd.WHITE);
+        
     }
 
     rd.close_window();
