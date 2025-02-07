@@ -1,7 +1,6 @@
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb_image.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,7 +21,7 @@ class Mesh {
 
         Mesh(){
         };
-        void genMesh();
+        void create_mesh();
         void draw(unsigned int shader, unsigned int texture);
     private:
         unsigned int VBO, VAO, EBO;

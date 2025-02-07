@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-void Mesh::genMesh()
+void Mesh::create_mesh()
 {
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

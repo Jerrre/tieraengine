@@ -18,6 +18,7 @@ set( fpsgl_source
         main.cpp
         render.cpp
         mesh.cpp
+        texture.cpp
         )
 
 add_executable( fpsgl ${fpsgl_source} )
