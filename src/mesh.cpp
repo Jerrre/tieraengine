@@ -1,4 +1,11 @@
 #include "mesh.h"
+#include "texture.h"
+#include "shader.h"
+
+Mesh::Mesh(){
+    shader = new Shader;
+    texture = new Texture;
+}
 
 void Mesh::create_mesh()
 {
@@ -28,13 +35,16 @@ void Mesh::create_mesh()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(unsigned int shader, unsigned int texture)
+void Mesh::draw(Color color, glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
-    glUniform4f(glGetUniformLocation(shader, "newColor"), 1.0, 1.0, 1.0, 1.0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    shader->set_texture(0);
+    shader->set_color(color);
+    shader->set_matrices(transform, model, view, projection);
 
-    glUseProgram(shader);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->get_texture());
+
+    shader->use();
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

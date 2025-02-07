@@ -12,17 +12,22 @@
 #include <iostream>
 #include <vector>
 
+#include "global.h"
+
+class Texture;
+class Shader;
+
 class Mesh {
     public:
+        Mesh();
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec2> texCoords;
         //std::vector<glm::vec3> normals;
         std::vector<unsigned int> indices;
-
-        Mesh(){
-        };
+        Texture* texture;
+        Shader* shader;
         void create_mesh();
-        void draw(unsigned int shader, unsigned int texture);
+        void draw(Color color, glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection);
     private:
         unsigned int VBO, VAO, EBO;
 };

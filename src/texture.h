@@ -18,11 +18,12 @@ struct Image{
 class Texture {
     public:
         void load_image(const char *path);
-        void create_texture(unsigned int shaderProgram);
+        void create_texture();
 
         Texture(){
         };
         unsigned int texture;
+        unsigned int get_texture(){return texture;};
     private:
         Image img = {0};
 };

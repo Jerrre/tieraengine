@@ -10,7 +10,7 @@ void Texture::load_image(const char *path)
     }
 }
 
-void Texture::create_texture(unsigned int shaderProgram)
+void Texture::create_texture()
 {
     glGenTextures(1, &texture);
     glActiveTexture(GL_TEXTURE0); // active texture unit 0, only needed if shader has multiple textures
@@ -24,7 +24,4 @@ void Texture::create_texture(unsigned int shaderProgram)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(img.data);
-
-    glUseProgram(shaderProgram);
-    glUniform1i(glGetUniformLocation(shaderProgram, "newTexture"), 0);
 }

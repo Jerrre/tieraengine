@@ -1,6 +1,7 @@
 #include "render.h"
 #include "mesh.h"
 #include "texture.h"
+#include "shader.h"
 
 int main(void)
 {
@@ -103,9 +104,10 @@ int main(void)
 
     mesh.create_mesh();
 
-    Texture tex;
-    tex.load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
-    tex.create_texture(rd.shaderProgram);
+    mesh.shader->create_shader();
+
+    mesh.texture->load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
+    mesh.texture->create_texture();
 
     glm::mat4 trans = glm::mat4(1.0f);
     glm::mat4 model = glm::mat4(1.0f);
@@ -115,18 +117,17 @@ int main(void)
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 
     model = glm::translate(model, glm::vec3(1.0f, 2.0f, -1.0f));
-    
+
     while (!rd.window_should_close())
     {
         rd.clear_background(rd.BLACK);
-        mesh.draw(rd.shaderProgram, tex.texture);
 
         for (int i = 0; i < 10; i++){
             float angle = (3.0f/10000)*i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
         }
+        mesh.draw(rd.WHITE, trans, model, view, proj);
 
-        rd.set_default_shader_matrices(trans, model, view, proj);
         rd.end_draw();
         
     }
