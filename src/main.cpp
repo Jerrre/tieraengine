@@ -126,7 +126,7 @@ int main(void)
             float angle = (3.0f/10000)*i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
         }
-        mesh.draw(rd.WHITE, trans, model, view, proj);
+        mesh.draw(rd.RED, trans, model, view, proj);
 
         rd.end_draw();
         
