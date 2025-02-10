@@ -17,6 +17,9 @@ add_subdirectory(external/glm-1.0.1)
 set( fpsgl_source
         main.cpp
         render.cpp
+        mesh.cpp
+        texture.cpp
+        shader.cpp
         )
 
 add_executable( fpsgl ${fpsgl_source} )
