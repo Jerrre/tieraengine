@@ -13,7 +13,9 @@
 
 class Camera {
     public:
-        Camera();
+        Camera(glm::vec3 _position);
+        glm::vec3 position;
+        glm::mat4 view;
         
     private:
         
