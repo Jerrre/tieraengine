@@ -2,6 +2,7 @@
 #include "mesh.h"
 #include "texture.h"
 #include "shader.h"
+#include "camera.h"
 
 int main(void)
 {
