@@ -1,5 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
 struct Color{
     float r;
@@ -16,4 +16,4 @@ enum Input{
     RIGHT
 };
 
-#endif COLOR_H
+#endif GLOBAL_H
