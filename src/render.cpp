@@ -51,6 +51,13 @@ void Render::close_window(){
     glfwTerminate();
 }
 
+void Render::startDraw()
+{
+    float currentFrameTime = glfwGetTime();
+    deltaTime = currentFrameTime - lastFrameTime;
+    lastFrameTime = currentFrameTime;
+}
+
 void Render::clear_background(Color color){
     glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

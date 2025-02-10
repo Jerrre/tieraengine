@@ -18,7 +18,7 @@ class Camera {
         glm::vec3 front;
         glm::vec3 up;
         glm::mat4 view;
-        float speed = 0.005f;   
+        float speed = 5.0f;   
         void update();     
     private:
         

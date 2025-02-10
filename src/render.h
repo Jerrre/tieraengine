@@ -27,10 +27,12 @@ class Render {
         void init_window(int width, int heigth, const char *name);
         int window_should_close();
         void close_window();
-
+        void startDraw();
         void clear_background(Color color);
         void end_draw();
         Input processInput();
+        float deltaTime = 0.0f;
     private:
         GLFWwindow* window;
+        float lastFrameTime = 0.0f;
 };

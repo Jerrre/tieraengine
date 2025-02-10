@@ -127,6 +127,8 @@ int main(void)
     
     while (!rd.window_should_close())
     {
+        rd.startDraw();
+
         rd.clear_background(rd.BLACK);
 
         for (int i = 0; i < 10; i++){
@@ -135,17 +137,17 @@ int main(void)
         }
 
         if (rd.processInput() == UP)
-            cam.position += cam.speed * cam.front;
+            cam.position += cam.speed * cam.front * rd.deltaTime;
         if (rd.processInput() == DOWN)
-            cam.position -= cam.speed * cam.front;
+            cam.position -= cam.speed * cam.front * rd.deltaTime;
         if (rd.processInput() == LEFT)
-            cam.position -= glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed;
+            cam.position -= glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         if (rd.processInput() == RIGHT)
-            cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed;
+            cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         cam.update();
         mesh.draw(rd.RED, trans, model, cam.view, proj);
-        rd.end_draw();
         
+        rd.end_draw();    
     }
 
     rd.close_window();
