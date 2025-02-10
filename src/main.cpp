@@ -119,8 +119,12 @@ int main(void)
 
     //model = glm::translate(model, glm::vec3(1.0f, 2.0f, -1.0f));
 
-    Camera cam = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    Camera cam = Camera(
+        glm::vec3(0.0f, 0.0f, 3.0f), 
+        glm::vec3(0.0f, 0.0f, -1.0f), 
+        glm::vec3(0.0f, 1.0f, 0.0f));
 
+    
     while (!rd.window_should_close())
     {
         rd.clear_background(rd.BLACK);
@@ -129,8 +133,17 @@ int main(void)
             float angle = (3.0f/10000)*i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
         }
-        mesh.draw(rd.RED, trans, model, cam.view, proj);
 
+        if (rd.processInput() == UP)
+            cam.position += cam.speed * cam.front;
+        if (rd.processInput() == DOWN)
+            cam.position -= cam.speed * cam.front;
+        if (rd.processInput() == LEFT)
+            cam.position -= glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed;
+        if (rd.processInput() == RIGHT)
+            cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed;
+        cam.update();
+        mesh.draw(rd.RED, trans, model, cam.view, proj);
         rd.end_draw();
         
     }

@@ -59,3 +59,17 @@ void Render::end_draw(){
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
+
+Input Render::processInput()
+{
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        return UP;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        return DOWN;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        return LEFT;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        return RIGHT;
+    return NO_INPUT;
+        
+}

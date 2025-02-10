@@ -13,10 +13,13 @@
 
 class Camera {
     public:
-        Camera(glm::vec3 _position);
+        Camera(glm::vec3 _position, glm::vec3 _front, glm::vec3 _up);
         glm::vec3 position;
+        glm::vec3 front;
+        glm::vec3 up;
         glm::mat4 view;
-        
+        float speed = 0.005f;   
+        void update();     
     private:
         
 };

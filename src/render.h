@@ -30,6 +30,7 @@ class Render {
 
         void clear_background(Color color);
         void end_draw();
+        Input processInput();
     private:
         GLFWwindow* window;
 };

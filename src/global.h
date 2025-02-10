@@ -8,4 +8,12 @@ struct Color{
     float a;
 };
 
+enum Input{
+    NO_INPUT,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
 #endif COLOR_H
