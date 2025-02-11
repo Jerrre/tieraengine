@@ -13,21 +13,6 @@ void Render::framebuffer_size_callback(GLFWwindow* window, int width, int height
     glViewport(0, 0, width, height);
 }
 
-void Render::mouse_callback(GLFWwindow *window, double xPos, double yPos)
-{
-    float lastX = SCREEN_WIDTH / 2;
-    float lastY = SCREEN_HEIGHT / 2;
-
-    float xOffset = xPos - lastX;
-    float yOffset = lastY - yPos;
-    lastX = xPos;
-    lastY = yPos;
-
-    const float sensitivity = 0.1f;
-    xOffset *= sensitivity;
-    yOffset *= sensitivity;
-}
-
 void Render::init_window(int width, int heigth, const char *name){
     glfwSetErrorCallback(error_callback);
     if (!glfwInit()){
@@ -57,7 +42,6 @@ void Render::init_window(int width, int heigth, const char *name){
     glfwSetKeyCallback(window, key_callback);
     glEnable(GL_DEPTH_TEST);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouse_callback);
 
 }
 int Render::window_should_close(){
@@ -94,6 +78,29 @@ Input Render::processInput()
         return LEFT;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         return RIGHT;
+
     return NO_INPUT;
         
+}
+
+glm::vec2 Render::getMouseOffset()
+{
+    double xPos, yPos;
+    glm::vec2 mouseOffset;
+    glfwGetCursorPos(window, &xPos, &yPos);
+    float lastX = SCREEN_WIDTH / 2;
+    float lastY = SCREEN_HEIGHT / 2;
+
+    float xOffset = xPos - lastX;
+    float yOffset = lastY - yPos;
+    lastX = xPos;
+    lastY = yPos;
+
+    const float sensitivity = 0.1f;
+    xOffset *= sensitivity;
+    yOffset *= sensitivity;
+
+    mouseOffset = {xOffset, yOffset};
+
+    return mouseOffset;
 }

@@ -144,6 +144,9 @@ int main(void)
         cam.update();
         mesh.draw(rd.RED, trans, model, cam.view, proj);
         
+        std::cout<< rd.getMouseOffset().x << std::endl;
+        std::cout<< rd.getMouseOffset().y << std::endl;
+
         rd.end_draw();    
     }
 
