@@ -88,15 +88,18 @@ glm::vec2 Render::getMouseOffset()
     double xPos, yPos;
     glm::vec2 mouseOffset;
     glfwGetCursorPos(window, &xPos, &yPos);
-    float lastX = SCREEN_WIDTH / 2;
-    float lastY = SCREEN_HEIGHT / 2;
+
+    if (first_mouse){
+        lastX = xPos;
+        lastY = yPos;
+        first_mouse = false;
+    }
 
     float xOffset = xPos - lastX;
     float yOffset = lastY - yPos;
     lastX = xPos;
     lastY = yPos;
 
-    const float sensitivity = 0.1f;
     xOffset *= sensitivity;
     yOffset *= sensitivity;
 

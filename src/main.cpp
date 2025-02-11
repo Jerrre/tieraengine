@@ -132,6 +132,8 @@ int main(void)
             float angle = (3.0f/10000)*i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
         }
+        
+        cam.update(rd.getMouseOffset());
 
         if (rd.processInput() == UP)
             cam.position += cam.speed * cam.front * rd.deltaTime;
@@ -141,11 +143,8 @@ int main(void)
             cam.position -= glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         if (rd.processInput() == RIGHT)
             cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
-        cam.update();
-        mesh.draw(rd.RED, trans, model, cam.view, proj);
         
-        std::cout<< rd.getMouseOffset().x << std::endl;
-        std::cout<< rd.getMouseOffset().y << std::endl;
+        mesh.draw(rd.RED, trans, model, cam.view, proj);
 
         rd.end_draw();    
     }
