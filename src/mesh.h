@@ -26,8 +26,9 @@ class Mesh {
         std::vector<unsigned int> indices;
         Texture* texture;
         Shader* shader;
+        glm::mat4 model = glm::mat4(1.0f);
         void create_mesh();
-        void draw(Color color, glm::mat4 model, glm::mat4 view, glm::mat4 projection);
+        void draw(Color color, glm::mat4 view, glm::mat4 projection);
     private:
         unsigned int VBO, VAO, EBO;
 };

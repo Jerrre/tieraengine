@@ -112,9 +112,6 @@ int main(void)
         glm::vec3(0.0f, 0.0f, -1.0f), 
         glm::vec3(0.0f, 1.0f, 0.0f));
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
     glm::mat4 proj = glm::perspective(glm::radians(cam.fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     while (!rd.window_should_close())
@@ -125,7 +122,7 @@ int main(void)
 
         for (int i = 0; i < 10; i++){
             float angle = (3.0f/10000)*i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
+            mesh.model = glm::rotate(mesh.model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
         }
 
         cam.update(rd.getMouseOffset());
@@ -139,7 +136,7 @@ int main(void)
         if (rd.processInput() == RIGHT)
             cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         
-        mesh.draw(rd.RED, model, cam.view, proj);
+        mesh.draw(rd.RED, cam.view, proj);
 
         rd.end_draw();    
     }

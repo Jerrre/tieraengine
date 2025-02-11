@@ -35,7 +35,7 @@ void Mesh::create_mesh()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Color color, glm::mat4 model, glm::mat4 view, glm::mat4 projection)
+void Mesh::draw(Color color, glm::mat4 view, glm::mat4 projection)
 {
     shader->set_texture(0);
     shader->set_color(color);
