@@ -1,19 +1,19 @@
 #include "render.h"
 
-void error_callback(int error, const char* description){
+void Render::error_callback(int error, const char* description){
     fprintf(stderr, "Error: %s\n", description);
 }
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void Render::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void Render::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow *window, double xPos, double yPos)
+void Render::mouse_callback(GLFWwindow *window, double xPos, double yPos)
 {
     float lastX = SCREEN_WIDTH / 2;
     float lastY = SCREEN_HEIGHT / 2;

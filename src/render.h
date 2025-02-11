@@ -11,10 +11,6 @@
 
 #include "global.h"
 
-void error_callback(int error, const char* description);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 
 class Render {
     public:
@@ -34,7 +30,10 @@ class Render {
         Input processInput();
         float deltaTime = 0.0f;
     private:
-
+        static void error_callback(int error, const char* description);
+        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+        static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void mouse_callback(GLFWwindow* window, double xPos, double yPos);
         GLFWwindow* window;
         float lastFrameTime = 0.0f;
 };
