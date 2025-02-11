@@ -1,5 +1,8 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
+const unsigned int SCREEN_WIDTH = 640;
+const unsigned int SCREEN_HEIGHT = 480;
 
 struct Color{
     float r;
@@ -8,4 +11,12 @@ struct Color{
     float a;
 };
 
-#endif COLOR_H
+enum Input{
+    NO_INPUT,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
+#endif GLOBAL_H

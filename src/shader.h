@@ -16,7 +16,7 @@ class Shader {
         Shader(){};
 
         void create_shader();
-        void set_matrices(glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection);
+        void set_matrices(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
         void set_color(Color color);
         void set_texture(unsigned int texUnit);
         void use();

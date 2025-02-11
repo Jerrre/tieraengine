@@ -10,7 +10,6 @@ void Shader::create_shader()
         "layout (location = 0) in vec3 aPos;\n"
         "layout (location = 1) in vec2 aTexCoord;\n"
         "out vec2 TexCoord;\n"
-        "uniform mat4 transform;\n"
         "uniform mat4 model;\n"
         "uniform mat4 view;\n"
         "uniform mat4 projection;\n"
@@ -64,9 +63,8 @@ void Shader::create_shader()
     glDeleteShader(fragmentShader);
 }
 
-void Shader::set_matrices(glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection)
+void Shader::set_matrices(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));

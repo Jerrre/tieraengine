@@ -11,9 +11,6 @@
 
 #include "global.h"
 
-void error_callback(int error, const char* description);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 class Render {
     public:
@@ -27,9 +24,20 @@ class Render {
         void init_window(int width, int heigth, const char *name);
         int window_should_close();
         void close_window();
-
+        void startDraw();
         void clear_background(Color color);
         void end_draw();
+        Input processInput();
+        float deltaTime = 0.0f;
+        glm::vec2 getMouseOffset();
     private:
+        bool first_mouse = true;
+        const float sensitivity = 0.3f;
+        float lastX = SCREEN_WIDTH / 2;
+        float lastY = SCREEN_HEIGHT / 2;
+        static void error_callback(int error, const char* description);
+        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+        static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         GLFWwindow* window;
+        float lastFrameTime = 0.0f;
 };
