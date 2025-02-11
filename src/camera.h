@@ -19,6 +19,7 @@ class Camera {
         glm::vec3 up;
         glm::mat4 view;
         float speed = 5.0f;   
+        float fov = 45.0f;
         void update(glm::vec2 mouseOffset);
     private:
         float yaw = -90.0f;

@@ -107,21 +107,16 @@ int main(void)
     mesh.texture->load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
     mesh.texture->create_texture();
 
-    glm::mat4 trans = glm::mat4(1.0f);
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
-    //model = glm::translate(model, glm::vec3(1.0f, 2.0f, -1.0f));
-
     Camera cam = Camera(
         glm::vec3(0.0f, 0.0f, 3.0f), 
         glm::vec3(0.0f, 0.0f, -1.0f), 
         glm::vec3(0.0f, 1.0f, 0.0f));
 
-    
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glm::mat4 proj = glm::perspective(glm::radians(cam.fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
     while (!rd.window_should_close())
     {
         rd.startDraw();
@@ -132,7 +127,7 @@ int main(void)
             float angle = (3.0f/10000)*i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.1f, 0.9f));
         }
-        
+
         cam.update(rd.getMouseOffset());
 
         if (rd.processInput() == UP)
@@ -144,7 +139,7 @@ int main(void)
         if (rd.processInput() == RIGHT)
             cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         
-        mesh.draw(rd.RED, trans, model, cam.view, proj);
+        mesh.draw(rd.RED, model, cam.view, proj);
 
         rd.end_draw();    
     }

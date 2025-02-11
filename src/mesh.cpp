@@ -35,11 +35,11 @@ void Mesh::create_mesh()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Color color, glm::mat4 transform, glm::mat4 model, glm::mat4 view, glm::mat4 projection)
+void Mesh::draw(Color color, glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
     shader->set_texture(0);
     shader->set_color(color);
-    shader->set_matrices(transform, model, view, projection);
+    shader->set_matrices(model, view, projection);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->get_texture());
