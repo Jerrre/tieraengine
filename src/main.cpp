@@ -7,10 +7,7 @@
 int main(void)
 {
     Render rd;
-    unsigned int width, height;
-    width = 640;
-    height = 480;
-    rd.init_window(width, height, "fpsgl");
+    rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
     float vertex_arr[] = {
         -0.5f,-0.5f,-0.5f, 
         0.5f,-0.5f,-0.5f, 
@@ -115,7 +112,7 @@ int main(void)
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     //model = glm::translate(model, glm::vec3(1.0f, 2.0f, -1.0f));
 
