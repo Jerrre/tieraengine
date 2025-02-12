@@ -2,5 +2,17 @@
 
 void parse_map(const char* filePath)
 {
-    std::cout << filePath << std::endl;
+    std::string line;
+    std::string mapContent;
+    std::ifstream mapFile(filePath);
+
+    if (mapFile.is_open()){
+        while (getline (mapFile,line)){
+            std::cout << line << std::endl;
+        }
+        mapFile.close();
+    }
+    else{
+        std::cout << "ERROR: Unable to open map file" << std::endl;
+    }
 }

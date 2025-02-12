@@ -3,5 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 void parse_map(const char* filePath);
