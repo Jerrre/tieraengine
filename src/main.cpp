@@ -3,6 +3,7 @@
 #include "texture.h"
 #include "shader.h"
 #include "camera.h"
+#include "map_parser.h"
 
 int main(void)
 {
@@ -88,6 +89,8 @@ int main(void)
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
     };
+
+    parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.map");
 
     Mesh mesh;
 
