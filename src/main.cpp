@@ -90,7 +90,7 @@ int main(void)
         1, 2, 3  // second triangle
     };
 
-    parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.map");
+    parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\level1.map");
 
     Mesh mesh;
 
