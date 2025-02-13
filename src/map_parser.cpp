@@ -10,6 +10,7 @@ void parse_map(const char* filePath)
     bool brushStart = false;
     bool worldspawn_entity = true;
     std::string prevLine = "";
+    std::vector<std::vector<glm::vec3>> brushPlanes;
 
     if (mapFile.is_open()){
         while (getline (mapFile,line)){
@@ -27,6 +28,13 @@ void parse_map(const char* filePath)
                     if (brushStart){
                         if (line == "}"){
                             brushStart = false;
+                            for (int i = 0; i < brushPlanes.size(); i++){
+                                std::cout << glm::to_string(brushPlanes[i][0]) << " ";
+                                std::cout << glm::to_string(brushPlanes[i][1]) << " ";
+                                std::cout << glm::to_string(brushPlanes[i][2]) << std::endl;
+                            }
+
+                            brushPlanes.clear();
                         }
                         if (line != "}" && line != "{"){
                             std::string texPart = line;
@@ -36,27 +44,25 @@ void parse_map(const char* filePath)
                             while (texPart.find(" ) ") != std::string::npos){
                                 unsigned int ind = texPart.find(" ) ") ;
                                 coordPart = texPart.substr(0, ind);
-                                coordPart.erase(0,2);
+                                coordPart.erase(0,2); // trim spaces
                                 
                                 std::vector<std::string> tempPlaneCoord;
                                 while (coordPart.find(" ") != std::string::npos){
                                     unsigned int ind2 = coordPart.find(" ");
                                     std::string value = coordPart.substr(0, ind2);
-                                    coordPart.erase(0, ind2+1);
+                                    coordPart.erase(0, ind2+1); // trim space too
                                     tempPlaneCoord.push_back(value);
                                 }
                                 tempPlaneCoord.push_back(coordPart);
                                 planeCoords.push_back(glm::vec3(std::stof(tempPlaneCoord[0]), std::stof(tempPlaneCoord[1]), std::stof(tempPlaneCoord[2])));
 
-                                texPart.erase(0, ind+3);
+                                texPart.erase(0, ind+3); // trim spaces
                                 
                             }
-                            std::cout << glm::to_string(planeCoords[0]) << " ";
-                            std::cout << glm::to_string(planeCoords[1]) << " ";
-                            std::cout << glm::to_string(planeCoords[2]) << std::endl;
+                            brushPlanes.push_back(planeCoords);
 
                             // process tempTail here
-                            //std::cout << tempTail << std::endl;
+                            //std::cout << texPart << std::endl;
                         }
                     }
                     if (line.find("brush") != std::string::npos){
