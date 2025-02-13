@@ -29,7 +29,34 @@ void parse_map(const char* filePath)
                             brushStart = false;
                         }
                         if (line != "}" && line != "{"){
-                            std::cout << line << std::endl;
+                            std::string texPart = line;
+                            std::string coordPart = "";
+                            std::vector<glm::vec3> planeCoords; // 3 points (xyz) defining a plane
+                            
+                            while (texPart.find(" ) ") != std::string::npos){
+                                unsigned int ind = texPart.find(" ) ") ;
+                                coordPart = texPart.substr(0, ind);
+                                coordPart.erase(0,2);
+                                
+                                std::vector<std::string> tempPlaneCoord;
+                                while (coordPart.find(" ") != std::string::npos){
+                                    unsigned int ind2 = coordPart.find(" ");
+                                    std::string value = coordPart.substr(0, ind2);
+                                    coordPart.erase(0, ind2+1);
+                                    tempPlaneCoord.push_back(value);
+                                }
+                                tempPlaneCoord.push_back(coordPart);
+                                planeCoords.push_back(glm::vec3(std::stof(tempPlaneCoord[0]), std::stof(tempPlaneCoord[1]), std::stof(tempPlaneCoord[2])));
+
+                                texPart.erase(0, ind+3);
+                                
+                            }
+                            std::cout << glm::to_string(planeCoords[0]) << " ";
+                            std::cout << glm::to_string(planeCoords[1]) << " ";
+                            std::cout << glm::to_string(planeCoords[2]) << std::endl;
+
+                            // process tempTail here
+                            //std::cout << tempTail << std::endl;
                         }
                     }
                     if (line.find("brush") != std::string::npos){
