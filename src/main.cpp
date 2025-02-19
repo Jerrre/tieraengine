@@ -90,7 +90,9 @@ int main(void)
         1, 2, 3  // second triangle
     };
 
-    parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.map");
+    std::vector<Mesh> map;
+
+    map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.map");
 
     Mesh mesh;
 
@@ -106,6 +108,8 @@ int main(void)
     mesh.create_mesh();
 
     mesh.shader->create_shader();
+    map[0].shader->create_shader();
+    map[0].model = glm::scale(map[0].model, glm::vec3(0.01, 0.01, 0.01));
 
     mesh.texture->load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
     mesh.texture->create_texture();
@@ -139,7 +143,8 @@ int main(void)
         if (rd.processInput() == RIGHT)
             cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         
-        mesh.draw(rd.RED, cam.view, proj);
+        //mesh.draw(rd.RED, cam.view, proj);
+        map[0].draw(rd.RED, cam.view, proj);
 
         rd.end_draw();    
     }

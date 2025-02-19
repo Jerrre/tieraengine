@@ -17,7 +17,7 @@
     return texNames.size()-1;
 }*/
 
-void parse_map(const char* filePath)
+std::vector<Mesh> parse_map(const char* filePath)
 {
     std::string line;
     std::string mapContent;
@@ -27,9 +27,9 @@ void parse_map(const char* filePath)
     bool brushStart = false;
     bool worldspawn_entity = true;
     std::string prevLine = "";
-    //std::vector<std::vector<glm::vec3>> brushPlanes;
 
     std::vector<BrushFace> brushFaces;
+    std::vector<Mesh> mapMeshes;
 
     if (mapFile.is_open()){
         while (getline (mapFile,line)){
@@ -81,31 +81,31 @@ void parse_map(const char* filePath)
                                 brushFaces.erase(brushFaces.begin());
                             }
                         
-                            std::vector<Mesh> mapMeshes;
                             // iterate calculated vertices and sort their order and winding, format the data for custom mesh generator
-                            /*for (int face = 0; face < brushFaces.size(); face++){
-                                MeshInfo brushMesh;
+                            for (int face = 0; face < brushFaces.size(); face++){
+                                Mesh brushMesh;
                                 brushFaces[face].polygon = sort_vertices(brushFaces[face]);
-                                std::vector<float> tempTexCoor;
-                                std::vector<float> tempVertCoor;
-                                triangulate(brushFaces[face], tempVertCoor, tempTexCoor);
 
+                                for (int ind = 0; ind < brushFaces[face].polygon.size(); ind++){
+                                    std::cout << glm::to_string(brushFaces[face].polygon[ind]) << std::endl;
+                                }
+                                std::cout << std::endl;
 
-                                append(&brushMesh.vertices, ..tempVertCoor[:])
-                                append(&brushMesh.texCoords, ..tempTexCoor[:])
-                                newMesh: rl.Mesh = GenMeshCustom(brushMesh)
-                                append(&mapMeshes, newMesh)
+                                triangulate(brushFaces[face], brushMesh);
+                                brushMesh.create_mesh();
+
+                                mapMeshes.push_back(brushMesh);
                             }
-                            newModel: rl.Model
-                            newModel = LoadCustomModelFromMesh(mapMeshes, mapMaterials, brushFaces)
-                            append(&mapModels, newModel)*/
+                            //newModel: rl.Model
+                            //newModel = LoadCustomModelFromMesh(mapMeshes, mapMaterials, brushFaces)
+                            //append(&mapModels, newModel)
 
-                            for (int ind = 0; ind < brushFaces.size(); ind++){
+                            /*for (int ind = 0; ind < brushFaces.size(); ind++){
                                 for (int ind2 = 0; ind2 < brushFaces[ind].polygon.size(); ind2++){
                                     std::cout << glm::to_string(brushFaces[ind].polygon[ind2]); 
                                 }
                                 std::cout << std::endl;
-                            }
+                            }*/
 
                             brushFaces.clear();
                         }
@@ -158,6 +158,7 @@ void parse_map(const char* filePath)
     else{
         std::cout << "ERROR: Unable to open map file" << std::endl;
     }
+    return mapMeshes;
 }
 
 /*Model load_custom_model_from_mesh(std::vector<Mesh> meshArr, std::vector<Material> matArr, std::vector<BrushFace> brushFaces){
@@ -195,28 +196,23 @@ void parse_map(const char* filePath)
     return texture
 }*/
 
-void triangulate(BrushFace brushFace, std::vector<float> &triVertices, std::vector<float> &triTexCoords){
+void triangulate(BrushFace brushFace, Mesh &brushMesh){
     int triCount = brushFace.polygon.size() - 2;
     std::vector<glm::vec3> triPoly;
 
-    triPoly[0] = brushFace.polygon[0];
+    triPoly.push_back(brushFace.polygon[0]);
 
     glm::vec3 planeNormal = calc_plane_normal(brushFace.plane);
     glm::vec3 triNormal;
 
     for (int tri = 0; tri < triCount; tri++){
-        triPoly[1] = brushFace.polygon[tri+1];
-        triPoly[2] = brushFace.polygon[tri+2];
+        triPoly.push_back(brushFace.polygon[tri + 1]);
+        triPoly.push_back(brushFace.polygon[tri + 2]);
 
         for (int vert = 0; vert < triPoly.size(); vert++){
-            triVertices.push_back(triPoly[vert].x);
-            triVertices.push_back(triPoly[vert].y);
-            triVertices.push_back(triPoly[vert].z);
-
-            glm::vec2 uv_coord = calc_UV_coord(triPoly[vert], brushFace.texInfo);
-            
-            triTexCoords.push_back(uv_coord.x);
-            triTexCoords.push_back(uv_coord.y); 
+            brushMesh.vertices.push_back(triPoly[vert]);
+            glm::vec2 uv_coord = calc_UV_coord(triPoly[vert], brushFace.texInfo) ;
+            brushMesh.texCoords.push_back(uv_coord);
         }
     }
 }
@@ -258,7 +254,8 @@ std::vector<glm::vec3> sort_vertices(BrushFace brushFace){
     for (int ind = 0; ind < vertCount; ind++){
         double dotProd = glm::dot(signTestVec, glm::normalize(mapped[ind]-center));
         signTest = std::min(std::max(dotProd, -1.0), 1.0);
-        float angle = glm::orientedAngle(refVec, glm::normalize(mapped[ind]-center));
+        double acosDot = glm::dot(refVec, glm::normalize(mapped[ind]-center));
+        float angle = glm::acos(std::min(std::max(acosDot, -1.0), 1.0));
         if (signTest < 0){
             angle = 2*glm::pi<float>()-angle;
         }
@@ -349,23 +346,3 @@ glm::vec3 get_plane_intersection(std::vector<glm::vec3> plane1, std::vector<glm:
 
     return vertex;
 }
-
-/*Mesh gen_mesh_custom(MeshInfo meshInfo){
-    
-    int triCount = meshInfo.vertices.size()/(3*3);
-
-    Mesh mesh;
-    mesh.triangleCount = i32(triCount)
-    mesh.vertexCount = mesh.triangleCount*3
-    mesh.vertices = make([^]f32, mesh.vertexCount*3*size_of(f32))    // 3 vertices, 3 coordinates each (x, y, z)
-    mesh.texcoords = make([^]f32, mesh.vertexCount*2*size_of(f32))    // 3 vertices, 2 coordinates each (x, y)
-    //mesh.normals = make([^]f32, mesh.vertexCount*3*size_of(f32))    // 3 vertices, 3 coordinates each (x, y, z)
-
-    mesh.vertices = raw_data(meshInfo.vertices)
-    mesh.texcoords = raw_data(meshInfo.texCoords)
-
-    // Upload mesh data from CPU (RAM) to GPU (VRAM) memory
-    rl.UploadMesh(&mesh, false)
-
-    return mesh
-}*/
