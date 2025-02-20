@@ -86,11 +86,6 @@ std::vector<Mesh> parse_map(const char* filePath)
                                 Mesh brushMesh;
                                 brushFaces[face].polygon = sort_vertices(brushFaces[face]);
 
-                                for (int ind = 0; ind < brushFaces[face].polygon.size(); ind++){
-                                    std::cout << glm::to_string(brushFaces[face].polygon[ind]) << std::endl;
-                                }
-                                std::cout << std::endl;
-
                                 triangulate(brushFaces[face], brushMesh);
                                 brushMesh.create_mesh();
 
@@ -198,18 +193,18 @@ std::vector<Mesh> parse_map(const char* filePath)
 
 void triangulate(BrushFace brushFace, Mesh &brushMesh){
     int triCount = brushFace.polygon.size() - 2;
-    std::vector<glm::vec3> triPoly;
+    glm::vec3 triPoly[3];
 
-    triPoly.push_back(brushFace.polygon[0]);
+    triPoly[0] = brushFace.polygon[0];
 
     glm::vec3 planeNormal = calc_plane_normal(brushFace.plane);
     glm::vec3 triNormal;
 
     for (int tri = 0; tri < triCount; tri++){
-        triPoly.push_back(brushFace.polygon[tri + 1]);
-        triPoly.push_back(brushFace.polygon[tri + 2]);
+        triPoly[1] = brushFace.polygon[tri+1];
+        triPoly[2] = brushFace.polygon[tri+2];
 
-        for (int vert = 0; vert < triPoly.size(); vert++){
+        for (int vert = 0; vert < 3; vert++){
             brushMesh.vertices.push_back(triPoly[vert]);
             glm::vec2 uv_coord = calc_UV_coord(triPoly[vert], brushFace.texInfo) ;
             brushMesh.texCoords.push_back(uv_coord);

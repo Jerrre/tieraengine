@@ -94,6 +94,11 @@ int main(void)
 
     map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.map");
 
+    for (int i=0; i<map[0].vertices.size(); i++)
+    {
+        std::cout<< glm::to_string(map[0].vertices[i]) << std::endl;
+    }
+
     Mesh mesh;
 
     for (int i=0; i<sizeof(vertex_arr); i+=3)
@@ -108,8 +113,10 @@ int main(void)
     mesh.create_mesh();
 
     mesh.shader->create_shader();
-    map[0].shader->create_shader();
-    map[0].model = glm::scale(map[0].model, glm::vec3(0.01, 0.01, 0.01));
+    for (int m = 0; m < map.size(); m++){
+        map[m].shader->create_shader();
+        map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));    
+    }
 
     mesh.texture->load_image("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\container.png");
     mesh.texture->create_texture();
@@ -144,7 +151,9 @@ int main(void)
             cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         
         //mesh.draw(rd.RED, cam.view, proj);
-        map[0].draw(rd.RED, cam.view, proj);
+        for (int m = 0; m < map.size(); m++){
+            map[m].draw(rd.RED, cam.view, proj);
+        }
 
         rd.end_draw();    
     }
