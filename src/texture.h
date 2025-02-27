@@ -1,3 +1,6 @@
+#ifndef TEXTURE_H
+#define TEXTURE_H
+
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -24,6 +27,8 @@ class Texture {
         };
         unsigned int texture;
         unsigned int get_texture(){return texture;};
-    private:
         Image img = {0};
+    private:
 };
+
+#endif // !TEXTURE_H

@@ -1,21 +1,8 @@
 #include "map_parser.h"
 
-/*int get_material_index(std::vector<std::string> &texNames, std::vector<Material> &mapMaterials, std::string textureName){
-    
-    for (int texInd =0; texInd < texNames.size(); texInd++){
-        if (textureName == texNames[texInd]){
-            return texInd;
-        }
-    }
-    
-    Material newMat = rl.LoadMaterialDefault();
-    rl.SetMaterialTexture(&newMat, .ALBEDO, CreateTexture(textureName));
-    
-    mapMaterials.push_back(newMat);
-    texNames.push_back(textureName);
-
-    return texNames.size()-1;
-}*/
+#include "mesh.h"
+#include "texture.h"
+#include "global.h"
 
 std::vector<Mesh> parse_map(const char* filePath)
 {
@@ -30,6 +17,9 @@ std::vector<Mesh> parse_map(const char* filePath)
 
     std::vector<BrushFace> brushFaces;
     std::vector<Mesh> mapMeshes;
+
+    std::vector<std::string> mapTextureNames;
+    std::vector<Texture> mapTextures;
 
     if (mapFile.is_open()){
         while (getline (mapFile,line)){
@@ -60,7 +50,6 @@ std::vector<Mesh> parse_map(const char* filePath)
                                         for (int pln3 = 2; pln3 < brushFaces.size(); pln3++){
                                             vertex = get_plane_intersection(brushFaces[0].plane, brushFaces[pln2].plane, brushFaces[pln3].plane, &valid);
                                             if (valid){
-                                                //std::cout << glm::to_string(vertex) << std::endl;
                                                 if (vertex_inside_brush(brushFaces, vertex)){
                                                     bool dup = false;
                                                     for (int vert = 0; vert < convexPolygon.size(); vert++){
@@ -82,25 +71,20 @@ std::vector<Mesh> parse_map(const char* filePath)
                             }
                         
                             // iterate calculated vertices and sort their order and winding, format the data for custom mesh generator
-                            for (int face = 0; face < brushFaces.size(); face++){
+                            for (int face = 0; face < brushFaces.size(); face++) {
                                 Mesh brushMesh;
                                 brushFaces[face].polygon = sort_vertices(brushFaces[face]);
 
                                 triangulate(brushFaces[face], brushMesh);
+                                
                                 brushMesh.create_mesh();
+                                brushMesh.texture = mapTextures[brushFaces[face].texInfo.textureIndex];
 
                                 mapMeshes.push_back(brushMesh);
                             }
                             //newModel: rl.Model
                             //newModel = LoadCustomModelFromMesh(mapMeshes, mapMaterials, brushFaces)
                             //append(&mapModels, newModel)
-
-                            /*for (int ind = 0; ind < brushFaces.size(); ind++){
-                                for (int ind2 = 0; ind2 < brushFaces[ind].polygon.size(); ind2++){
-                                    std::cout << glm::to_string(brushFaces[ind].polygon[ind2]); 
-                                }
-                                std::cout << std::endl;
-                            }*/
 
                             brushFaces.clear();
                         }
@@ -129,8 +113,33 @@ std::vector<Mesh> parse_map(const char* filePath)
                                 texPart.erase(0, ind+3); // trim spaces
                                 
                             }
-                            // process tempTail here
-                            //std::cout << texPart << std::endl;
+                            // process texPart
+                            std::string value = "";
+                            std::vector<std::string> texInfoArr;
+
+                            while (texPart.find(" ") != std::string::npos){
+                                unsigned int ind = texPart.find(" ") ;
+                                value = texPart.substr(0, ind);
+                                if (value != "[" && value != "]"){
+                                    texInfoArr.push_back(value);
+                                }
+                                texPart.erase(0, ind + 1);                                
+                            }
+                            texInfoArr.push_back(texPart);
+                            // example
+                            // metallic [ 0 -1 0 0 ] [ 0 0 -1 0 ] 0 1 1
+                            // texName [ Ux Uy Uz Uoff ] [ Vx Vy Vz Voff ] rot Uscale Vscale
+                            //     0      1  2  3   4       5  6  7   8     9    10      11
+
+                            brushFace.texInfo.name = texInfoArr[0];
+                            brushFace.texInfo.u_axis = {std::stof(texInfoArr[1]), std::stof(texInfoArr[3]), -std::stof(texInfoArr[2])}; // swap y and z axis
+                            brushFace.texInfo.v_axis = {std::stof(texInfoArr[5]), std::stof(texInfoArr[7]), -std::stof(texInfoArr[6])}; // swap y and z axis
+                            brushFace.texInfo.uv_offset = {std::stof(texInfoArr[4]), std::stof(texInfoArr[8])};
+                            brushFace.texInfo.rotation = std::stof(texInfoArr[9]);
+                            brushFace.texInfo.uv_scale = {std::stof(texInfoArr[10]), std::stof(texInfoArr[11])};
+                            brushFace.texInfo.textureIndex = get_texture_index(mapTextureNames, mapTextures, texInfoArr[0]);
+                            brushFace.texInfo.width = mapTextures[brushFace.texInfo.textureIndex].img.width;
+                            brushFace.texInfo.height = mapTextures[brushFace.texInfo.textureIndex].img.height;
 
                             brushFaces.push_back(brushFace);
                         }
@@ -180,16 +189,25 @@ std::vector<Mesh> parse_map(const char* filePath)
     return model;
 }*/
 
-/*Texture2D create_texture(std::string texName){
-    std::vector<std::string> imgPathArr = {"resources//textures/", texName, ".png"};
-    std::string imgPath = imgPathArr[0] + imgPathArr[1] + imgPathArr[2];
+int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName){
     
-    texImg: rl.Image = rl.LoadImage(strings.clone_to_cstring(imgPath))
-    texture = rl.LoadTextureFromImage(texImg)
+    for (int texInd = 0; texInd < texNames.size(); texInd++) {
+        if (textureName == texNames[texInd]){
+            return texInd;
+        }
+    }
     
-    rl.UnloadImage(texImg)
-    return texture
-}*/
+    Texture newTex;
+    std::string imgPath = globTexPath + textureName + ".png";
+
+    newTex.load_image(imgPath.data());
+    newTex.create_texture();
+    
+    mapTextures.push_back(newTex);
+    texNames.push_back(textureName);
+
+    return texNames.size()-1;
+}
 
 void triangulate(BrushFace brushFace, Mesh &brushMesh){
     int triCount = brushFace.polygon.size() - 2;
@@ -291,7 +309,6 @@ bool vertex_inside_brush(std::vector<BrushFace> brushFaces, glm::vec3 vertex){
     for (int face = 0; face < brushFaces.size(); face++){
         glm::vec3 testVec = vertex - brushFaces[face].plane[0];
         float dotProd = glm::dot(testVec, calc_plane_normal(brushFaces[face].plane));
-        //std::cout << dotProd << std::endl;
         if (dotProd > 0){
             inside = false;
         }

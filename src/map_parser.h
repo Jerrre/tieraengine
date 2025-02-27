@@ -12,7 +12,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "mesh.h"
+class Mesh;
+class Texture;
 
 //texName [Ux Uy Uz Uoff] [Vx Vy Vz Voff] rot Uscale Vscale
 struct TexInfo{
@@ -32,13 +33,11 @@ struct BrushFace{
     std::vector<glm::vec3> polygon;
 };
 
-//int get_material_index(std::vector<std::string> &texNames, std::vector<Material> &mapMaterials, std::string textureName);
-
 std::vector<Mesh> parse_map(const char* filePath);
 
 //Model load_custom_model_from_mesh(std::vector<Mesh> meshArr, std::vector<Material> matArr, std::vector<BrushFace> brushFaces);
 
-//Texture2D create_texture(std::string texName);
+int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName);
 
 void triangulate(BrushFace brushFace, Mesh &brushMesh);
 
