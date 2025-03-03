@@ -54,3 +54,7 @@ glm::vec3 get_plane_intersection(
     std::vector<glm::vec3> plane2, 
     std::vector<glm::vec3> plane3,
     int* valid);
+
+float mat_3x3_det(glm::mat3x3 nM);
+
+double calcDotProd(glm::vec3 a, glm::vec3 b);

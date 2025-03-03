@@ -4,6 +4,8 @@
 #include "texture.h"
 #include "global.h"
 
+const float EPSILON = 0.000001;
+
 std::vector<Mesh> parse_map(const char* filePath)
 {
     std::string line;
@@ -52,6 +54,7 @@ std::vector<Mesh> parse_map(const char* filePath)
                                             if (valid){
                                                 if (vertex_inside_brush(brushFaces, vertex)){
                                                     bool dup = false;
+                                                    //std::cout << glm::to_string(vertex) << std::endl;
                                                     for (int vert = 0; vert < convexPolygon.size(); vert++){
                                                         if (convexPolygon[vert] == vertex){
                                                             dup = true;
@@ -76,6 +79,10 @@ std::vector<Mesh> parse_map(const char* filePath)
                                 brushFaces[face].polygon = sort_vertices(brushFaces[face]);
 
                                 triangulate(brushFaces[face], brushMesh);
+
+                                for (int i = 0; i < brushMesh.vertices.size(); i++) {
+                                    //std::cout << i+1 << " : " << glm::to_string(brushMesh.vertices[i]) << std::endl;
+                                }
                                 
                                 brushMesh.create_mesh();
                                 brushMesh.texture = mapTextures[brushFaces[face].texInfo.textureIndex];
@@ -308,8 +315,9 @@ bool vertex_inside_brush(std::vector<BrushFace> brushFaces, glm::vec3 vertex){
     bool inside = true;
     for (int face = 0; face < brushFaces.size(); face++){
         glm::vec3 testVec = vertex - brushFaces[face].plane[0];
-        float dotProd = glm::dot(testVec, calc_plane_normal(brushFaces[face].plane));
-        if (dotProd > 0){
+        //float dotProd = glm::dot(testVec, calc_plane_normal(brushFaces[face].plane));
+        double dotProd = calcDotProd(testVec, calc_plane_normal(brushFaces[face].plane));
+        if (dotProd > EPSILON){
             inside = false;
         }
     }
@@ -337,24 +345,51 @@ glm::vec3 get_plane_intersection(std::vector<glm::vec3> plane1, std::vector<glm:
         n3[0], n3[1], n3[2]
     };
 
-    float det = glm::determinant(normalMat);
-
-    if (det == 0){
-        *valid = 0;
-    }
-    else{
-        *valid = 1;
-    }
+    //float det0 = glm::determinant(normalMat);
+    double det = mat_3x3_det(normalMat);
 
     glm::mat3x3 normalMatInv = glm::inverse(normalMat);
     
     glm::vec3 vertex = dist*normalMatInv;
+    
+    vertex.x = round(vertex.x);
+    vertex.y = round(vertex.y);
+    vertex.z = round(vertex.z);
 
-    /*
-    vertex.x = glm::round(vertex.x);
-    vertex.y = glm::round(vertex.y);
-    vertex.z = glm::round(vertex.z);
-    */
+    if (det == 0) {
+        *valid = 0;
+    }
+    else if (std::isnan( glm::length(vertex))) {
+        *valid = 0;
+    }
+    else if (glm::length(vertex) > 1000000) {
+        *valid = 0;
+    }
+    else {
+        *valid = 1;
+        //printf("%.5f\n", det);
+    }
 
     return vertex;
+}
+
+// a b
+// c d
+// det = ad-bc
+// 00 01 02
+// 10 11 12
+// 20 21 22
+float mat_3x3_det(glm::mat3x3 nM){
+    float det;
+
+    double d1 = (nM[1][1] * nM[2][2]) - (nM[1][2] * nM[2][1]);
+    double d2 = (nM[1][0] * nM[2][2]) - (nM[1][2] * nM[2][0]);
+    double d3 = (nM[1][0] * nM[2][1]) - (nM[1][1] * nM[2][0]);
+    det = nM[0][0]*d1 - nM[0][1] * d2 + nM[0][2] * d3;
+
+    return det;
+}
+
+double calcDotProd(glm::vec3 a, glm::vec3 b) {
+    return double(a.x) * double(b.x) + double(a.y) * double(b.y) + double(a.z) * double(b.z);
 }
