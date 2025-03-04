@@ -12,7 +12,7 @@ int main(void)
 
 
     std::vector<Mesh> map;
-    map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.map");
+    map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map");
 
     for (int m = 0; m < map.size(); m++) {
         map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));

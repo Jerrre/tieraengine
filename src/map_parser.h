@@ -35,8 +35,6 @@ struct BrushFace{
 
 std::vector<Mesh> parse_map(const char* filePath);
 
-//Model load_custom_model_from_mesh(std::vector<Mesh> meshArr, std::vector<Material> matArr, std::vector<BrushFace> brushFaces);
-
 int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName);
 
 void triangulate(BrushFace brushFace, Mesh &brushMesh);

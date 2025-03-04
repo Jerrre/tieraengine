@@ -28,7 +28,7 @@ class Mesh {
         glm::mat4 model = glm::mat4(1.0f);
         void create_mesh();
         void draw(Shader &shader, Color color, glm::mat4 view, glm::mat4 projection);
-    private:
+    private: 
         unsigned int VBO, VAO, EBO;
 };
 #endif MESH_H

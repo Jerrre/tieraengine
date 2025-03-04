@@ -54,7 +54,6 @@ std::vector<Mesh> parse_map(const char* filePath)
                                             if (valid){
                                                 if (vertex_inside_brush(brushFaces, vertex)){
                                                     bool dup = false;
-                                                    //std::cout << glm::to_string(vertex) << std::endl;
                                                     for (int vert = 0; vert < convexPolygon.size(); vert++){
                                                         if (convexPolygon[vert] == vertex){
                                                             dup = true;
@@ -79,19 +78,12 @@ std::vector<Mesh> parse_map(const char* filePath)
                                 brushFaces[face].polygon = sort_vertices(brushFaces[face]);
 
                                 triangulate(brushFaces[face], brushMesh);
-
-                                for (int i = 0; i < brushMesh.vertices.size(); i++) {
-                                    //std::cout << i+1 << " : " << glm::to_string(brushMesh.vertices[i]) << std::endl;
-                                }
                                 
                                 brushMesh.create_mesh();
                                 brushMesh.texture = mapTextures[brushFaces[face].texInfo.textureIndex];
 
                                 mapMeshes.push_back(brushMesh);
                             }
-                            //newModel: rl.Model
-                            //newModel = LoadCustomModelFromMesh(mapMeshes, mapMaterials, brushFaces)
-                            //append(&mapModels, newModel)
 
                             brushFaces.clear();
                         }
@@ -171,30 +163,6 @@ std::vector<Mesh> parse_map(const char* filePath)
     }
     return mapMeshes;
 }
-
-/*Model load_custom_model_from_mesh(std::vector<Mesh> meshArr, std::vector<Material> matArr, std::vector<BrushFace> brushFaces){
-
-    int meshCount = meshArr.size();
-    int matCount = matArr.size();
-
-    model.transform = rl.Matrix(1);
-
-    model.meshCount = i32(meshCount)
-    model.meshes = make([^]rl.Mesh, meshCount*size_of(rl.Mesh))
-    model.meshes = raw_data(meshArr)
-
-    model.materialCount = i32(matCount)
-    model.materials = make([^]rl.Material, 2*size_of(rl.Material))
-    model.materials = raw_data(matArr)
-
-    model.meshMaterial = make([^]i32, meshCount*size_of(i32))
-
-    for mod:=0; mod<meshCount; mod+=1{
-        rl.SetModelMeshMaterial(&model, i32(mod), brushFaces[mod].texInfo.textureIndex)
-    }
-
-    return model;
-}*/
 
 int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName){
     

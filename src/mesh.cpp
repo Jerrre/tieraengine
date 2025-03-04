@@ -43,6 +43,6 @@ void Mesh::draw(Shader &shader, Color color, glm::mat4 view, glm::mat4 projectio
 
     shader.use();
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
