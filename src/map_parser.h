@@ -33,7 +33,7 @@ struct BrushFace{
     std::vector<glm::vec3> polygon;
 };
 
-std::vector<Mesh> parse_map(const char* filePath);
+std::vector<Mesh> parse_map(const char* filePath, glm::vec3* playerOrig);
 
 int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName);
 

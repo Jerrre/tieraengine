@@ -6,7 +6,7 @@
 
 const float EPSILON = 0.000001;
 
-std::vector<Mesh> parse_map(const char* filePath)
+std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
 {
     std::string line;
     std::string mapContent;
@@ -15,6 +15,8 @@ std::vector<Mesh> parse_map(const char* filePath)
     bool entityStart = false;
     bool brushStart = false;
     bool worldspawn_entity = true;
+    bool func_group = false;
+    bool player_start = false;
     std::string prevLine = "";
 
     std::vector<BrushFace> brushFaces;
@@ -26,7 +28,7 @@ std::vector<Mesh> parse_map(const char* filePath)
     if (mapFile.is_open()){
         while (getline (mapFile,line)){
             if (entityStart){
-                if (worldspawn_entity){
+                if (worldspawn_entity || func_group){
                     if (line.find("mapversion") != std::string::npos){
                         if (line.find("220") == std::string::npos){
                             std::cout << "ERROR: Map version 220 not used" << std::endl;
@@ -34,6 +36,7 @@ std::vector<Mesh> parse_map(const char* filePath)
                     }
                     if (line == "}" && prevLine == "}"){
                         worldspawn_entity = false;
+                        func_group = false;
                     }
 
                     if (brushStart){
@@ -148,8 +151,42 @@ std::vector<Mesh> parse_map(const char* filePath)
                     }
                     prevLine = line;
                 }
+                else if (player_start) {
+                    if (line.find("origin") != std::string::npos) {
+                        std::string value = "";
+                        std::string unprosLine = line;
+                        std::vector<std::string> origArr;
+
+                        while (unprosLine.find(" ") != std::string::npos) {
+                            unsigned int ind = unprosLine.find(" ");
+                            value = unprosLine.substr(0, ind);
+                            origArr.push_back(value);
+                            unprosLine.erase(0, ind + 1);
+                        }
+                        origArr.push_back(unprosLine);
+
+                        // trim " from the stored string values
+                        origArr[1] = origArr[1].erase(0, 1);
+                        origArr[3] = origArr[3].erase(origArr[3].length() - 1, 1);
+
+                        (*playerOrig)[0] = std::stof(origArr[1]);
+                        (*playerOrig)[1] = std::stof(origArr[2]);
+                        (*playerOrig)[2] = std::stof(origArr[3]);
+
+                    }
+                    else if (line == "}") {
+                        player_start = false;
+                    }
+                }
                 else{
-                    // TODO parse other entities
+                    // parse other entities
+                    if (line.find("func_group") != std::string::npos) { // these are layers, parse as brush geometry
+                        func_group = true;
+                        player_start = false;
+                    }
+                    else if (line.find("info_player_start") != std::string::npos) {
+                        player_start = true;
+                    }
                 }
             }
             if (line.find("entity") != std::string::npos){
