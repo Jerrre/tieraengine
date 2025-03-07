@@ -15,10 +15,7 @@ int main(void)
     glm::vec3 playerOrig;
     map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
 
-    playerOrig[0] = playerOrig[0] * 0.02;
-    playerOrig[1] = playerOrig[1] * 0.02;
-    playerOrig[2] = playerOrig[2] * 0.02;
-    std::cout << glm::to_string(playerOrig) << std::endl;
+    playerOrig = playerOrig * glm::vec3(0.02);
 
     for (int m = 0; m < map.size(); m++) {
         map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));
