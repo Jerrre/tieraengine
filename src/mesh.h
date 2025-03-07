@@ -1,3 +1,6 @@
+#ifndef MESH_H
+#define MESH_H
+
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -6,15 +9,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/string_cast.hpp>
-
 #include <iostream>
 #include <vector>
 
 #include "global.h"
+#include "texture.h"
 
-class Texture;
 class Shader;
 
 class Mesh {
@@ -24,11 +24,11 @@ class Mesh {
         std::vector<glm::vec2> texCoords;
         //std::vector<glm::vec3> normals;
         std::vector<unsigned int> indices;
-        Texture* texture;
-        Shader* shader;
+        Texture texture;
         glm::mat4 model = glm::mat4(1.0f);
         void create_mesh();
-        void draw(Color color, glm::mat4 view, glm::mat4 projection);
-    private:
+        void draw(Shader &shader, Color color, glm::mat4 view, glm::mat4 projection);
+    private: 
         unsigned int VBO, VAO, EBO;
 };
+#endif MESH_H
