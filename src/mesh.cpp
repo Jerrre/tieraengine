@@ -2,6 +2,9 @@
 #include "shader.h"
 
 Mesh::Mesh(){
+    VBO = -1;
+    EBO = -1;
+    VAO = -1;
 }
 
 void Mesh::create_mesh()
