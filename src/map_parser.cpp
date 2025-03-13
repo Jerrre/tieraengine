@@ -23,7 +23,8 @@ std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
     std::vector<Mesh> mapMeshes;
 
     std::vector<std::string> mapTextureNames;
-    std::vector<Texture> mapTextures;
+
+    std::vector<Mesh> sortedMeshes;
 
     if (mapFile.is_open()){
         while (getline (mapFile,line)){
@@ -77,15 +78,8 @@ std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
                         
                             // iterate calculated vertices and sort their order and winding, format the data for custom mesh generator
                             for (int face = 0; face < brushFaces.size(); face++) {
-                                Mesh brushMesh;
                                 brushFaces[face].polygon = sort_vertices(brushFaces[face]);
-
-                                triangulate(brushFaces[face], brushMesh);
-                                
-                                brushMesh.create_mesh();
-                                brushMesh.texture = mapTextures[brushFaces[face].texInfo.textureIndex];
-
-                                mapMeshes.push_back(brushMesh);
+                                triangulate(brushFaces[face], sortedMeshes[brushFaces[face].texInfo.textureIndex]);
                             }
 
                             brushFaces.clear();
@@ -139,9 +133,9 @@ std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
                             brushFace.texInfo.uv_offset = {std::stof(texInfoArr[4]), std::stof(texInfoArr[8])};
                             brushFace.texInfo.rotation = std::stof(texInfoArr[9]);
                             brushFace.texInfo.uv_scale = {std::stof(texInfoArr[10]), std::stof(texInfoArr[11])};
-                            brushFace.texInfo.textureIndex = get_texture_index(mapTextureNames, mapTextures, texInfoArr[0]);
-                            brushFace.texInfo.width = mapTextures[brushFace.texInfo.textureIndex].img.width;
-                            brushFace.texInfo.height = mapTextures[brushFace.texInfo.textureIndex].img.height;
+                            brushFace.texInfo.textureIndex = get_texture_index(mapTextureNames, sortedMeshes, texInfoArr[0]);
+                            brushFace.texInfo.width = sortedMeshes[brushFace.texInfo.textureIndex].texture.img.width;
+                            brushFace.texInfo.height = sortedMeshes[brushFace.texInfo.textureIndex].texture.img.height;
 
                             brushFaces.push_back(brushFace);
                         }
@@ -198,10 +192,16 @@ std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
     else{
         std::cout << "ERROR: Unable to open map file" << std::endl;
     }
+
+    for (int i = 0; i < sortedMeshes.size(); i++) {
+        sortedMeshes[i].create_mesh();
+        mapMeshes.push_back(sortedMeshes[i]);
+    }
+    
     return mapMeshes;
 }
 
-int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName){
+int get_texture_index(std::vector<std::string> &texNames, std::vector<Mesh> &sortedMeshes, std::string textureName){
     
     for (int texInd = 0; texInd < texNames.size(); texInd++) {
         if (textureName == texNames[texInd]){
@@ -214,8 +214,11 @@ int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &
 
     newTex.load_image(imgPath.data());
     newTex.create_texture();
+
+    Mesh newMesh;
+    newMesh.texture = newTex;
+    sortedMeshes.push_back(newMesh);
     
-    mapTextures.push_back(newTex);
     texNames.push_back(textureName);
 
     return texNames.size()-1;

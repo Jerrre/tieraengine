@@ -13,26 +13,6 @@ int main(void)
     Render rd;
     rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
 
-    int width, height, nrChannels;
-    unsigned char* data1;
-    unsigned char* data2;
-    unsigned char* data3;
-
-    data1 = stbi_load("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\metal_001.png", &width, &height, &nrChannels, 0);
-    data2 = stbi_load("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\metal_002.png", &width, &height, &nrChannels, 0);
-    data3 = stbi_load("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\metal_broken_001.png", &width, &height, &nrChannels, 0);
-
-    unsigned int img_size = width * height * nrChannels * sizeof(unsigned char);
-
-    unsigned char* test;
-    test = (unsigned char*)malloc(3*img_size);
-    memcpy(test,              data1, img_size);
-    memcpy(test + img_size,   data2, img_size);
-    memcpy(test + 2*img_size, data3, img_size);
-
-    stbi_write_png("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\test.png", width, 3*height, nrChannels, test, nrChannels * width);
-
-
     std::vector<Mesh> map;
     glm::vec3 playerOrig;
     map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
