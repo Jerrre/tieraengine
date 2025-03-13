@@ -41,6 +41,7 @@ void Render::init_window(int width, int heigth, const char *name){
 
     glfwSetKeyCallback(window, key_callback);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 }
