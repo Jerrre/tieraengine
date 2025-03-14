@@ -35,7 +35,7 @@ struct BrushFace{
 
 std::vector<Mesh> parse_map(const char* filePath, glm::vec3* playerOrig);
 
-int get_texture_index(std::vector<std::string> &texNames, std::vector<Texture> &mapTextures, std::string textureName);
+int get_texture_index(std::vector<std::string> &texNames, std::vector<Mesh>& sortedMeshes, std::string textureName);
 
 void triangulate(BrushFace brushFace, Mesh &brushMesh);
 

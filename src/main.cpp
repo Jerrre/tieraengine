@@ -5,11 +5,13 @@
 #include "camera.h"
 #include "map_parser.h"
 
+#include <stb_image.h>
+#include <stb_image_write.h>
+
 int main(void)
 {
     Render rd;
     rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
-
 
     std::vector<Mesh> map;
     glm::vec3 playerOrig;
