@@ -5,6 +5,12 @@
 #include "camera.h"
 #include "map_parser.h"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
 #include <stb_image.h>
 #include <stb_image_write.h>
 
@@ -16,6 +22,14 @@ int main(void)
     std::vector<Mesh> map;
     glm::vec3 playerOrig;
     map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
+
+    float test;
+    std::ifstream datafile;
+    datafile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.dat", std::ios::binary | std::ios::in);
+    datafile.read(reinterpret_cast<char*>(&test), sizeof(float));
+    datafile.close();
+    std::cout << test << std::endl;
+
 
     playerOrig = playerOrig * glm::vec3(0.02);
 

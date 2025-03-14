@@ -197,7 +197,12 @@ std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
         sortedMeshes[i].create_mesh();
         mapMeshes.push_back(sortedMeshes[i]);
     }
-    
+
+    std::ofstream map_out;
+    map_out.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.dat", std::ios::binary | std::ios::out);
+    float test = -123.66;
+    map_out.write(reinterpret_cast<const char*>(&test), sizeof(float));
+    map_out.close();
     return mapMeshes;
 }
 
