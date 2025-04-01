@@ -4,6 +4,8 @@
 #include "texture.h"
 #include "global.h"
 
+#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
+
 const float EPSILON = 0.000001;
 
 std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
@@ -200,8 +202,21 @@ std::vector<Mesh> parse_map(const char* filePath, glm::vec3 *playerOrig)
 
     std::ofstream map_out;
     map_out.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.dat", std::ios::binary | std::ios::out);
-    float test = -123.66;
-    map_out.write(reinterpret_cast<const char*>(&test), sizeof(float));
+    glm::vec3 t1 = { 1,2,3 };
+    glm::vec3 t2 = { -4,5,-2.5 };
+    PACK(struct TestStruct {
+        std::vector<glm::vec3> vertices;
+        int tex;
+    });
+    TestStruct str;
+    str.vertices.push_back(t1);
+    str.vertices.push_back(t2);
+    str.tex = 6;
+    int size = str.vertices.size();
+    //map_out.write(reinterpret_cast<const char*>(&size), sizeof(int));
+    map_out.write(reinterpret_cast<const char*>(&str.vertices[0]), sizeof(str.vertices[0]));
+    map_out.write(reinterpret_cast<const char*>(&str.vertices[1]), sizeof(str.vertices[1]));
+    map_out.write(reinterpret_cast<const char*>(&str.tex), sizeof(int));
     map_out.close();
     return mapMeshes;
 }

@@ -14,6 +14,8 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
+
 int main(void)
 {
     Render rd;
@@ -24,11 +26,26 @@ int main(void)
     map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
 
     float test;
+    glm::vec3 t1;
+    glm::vec3 t2;
+    PACK(struct TestStruct {
+        std::vector<glm::vec3> vertices;
+        int tex;
+    });
+    TestStruct str;
+    str.vertices.reserve(2);
     std::ifstream datafile;
     datafile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.dat", std::ios::binary | std::ios::in);
-    datafile.read(reinterpret_cast<char*>(&test), sizeof(float));
+    glm::vec3 val = { 0,0,0 };
+    datafile.read(reinterpret_cast<char*>(&val), sizeof(val));
+    str.vertices.push_back(val);
+    datafile.read(reinterpret_cast<char*>(&val), sizeof(val));
+    str.vertices.push_back(val);
+    datafile.read(reinterpret_cast<char*>(&str.tex), sizeof(int));
     datafile.close();
-    std::cout << test << std::endl;
+    std::cout << glm::to_string(str.vertices[0]) << std::endl;
+    std::cout << glm::to_string(str.vertices[1]) << std::endl;
+    std::cout << str.tex << std::endl;
 
 
     playerOrig = playerOrig * glm::vec3(0.02);
