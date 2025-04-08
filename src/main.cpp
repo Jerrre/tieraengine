@@ -14,8 +14,6 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
-#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
-
 int main(void)
 {
     Render rd;
@@ -23,30 +21,48 @@ int main(void)
 
     std::vector<Mesh> map;
     glm::vec3 playerOrig;
-    map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
 
-    float test;
-    glm::vec3 t1;
-    glm::vec3 t2;
-    PACK(struct TestStruct {
-        std::vector<glm::vec3> vertices;
-        int tex;
-    });
-    TestStruct str;
-    str.vertices.reserve(2);
-    std::ifstream datafile;
-    datafile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\test.dat", std::ios::binary | std::ios::in);
-    glm::vec3 val = { 0,0,0 };
-    datafile.read(reinterpret_cast<char*>(&val), sizeof(val));
-    str.vertices.push_back(val);
-    datafile.read(reinterpret_cast<char*>(&val), sizeof(val));
-    str.vertices.push_back(val);
-    datafile.read(reinterpret_cast<char*>(&str.tex), sizeof(int));
-    datafile.close();
-    std::cout << glm::to_string(str.vertices[0]) << std::endl;
-    std::cout << glm::to_string(str.vertices[1]) << std::endl;
-    std::cout << str.tex << std::endl;
+    parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
 
+    std::ifstream mapfile;
+    mapfile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\map.dat", std::ios::binary | std::ios::in);
+
+    int meshCount = 0;
+    mapfile.read(reinterpret_cast<char*>(&meshCount), sizeof(meshCount));
+
+    glm::vec3 vertex;
+    glm::vec2 texCoord;
+
+    for (int meshInd = 0; meshInd < meshCount; meshInd++){
+        Mesh newMesh;
+        map.push_back(newMesh);
+        int vertexCount;
+        mapfile.read(reinterpret_cast<char*>(&vertexCount), sizeof(vertexCount));
+
+        for (int vertInd = 0; vertInd < vertexCount; vertInd++) {
+            mapfile.read(reinterpret_cast<char*>(&vertex), sizeof(vertex));
+            mapfile.read(reinterpret_cast<char*>(&texCoord), sizeof(texCoord));
+            map[meshInd].vertices.push_back(vertex);
+            map[meshInd].texCoords.push_back(texCoord);
+        }
+
+        int texSize;
+        unsigned char* imgData;
+        mapfile.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+        imgData = (unsigned char*)malloc(texSize);
+        if (imgData == NULL) {
+            std::cout << "Malloc error:\n" << std::endl;
+        }
+        mapfile.read(reinterpret_cast<char*>(imgData), texSize);
+
+        map[meshInd].texture.load_image_from_memory(imgData, texSize);
+        map[meshInd].texture.create_texture();
+        map[meshInd].create_mesh();
+
+        free(imgData);
+
+    }
+    mapfile.close();
 
     playerOrig = playerOrig * glm::vec3(0.02);
 
@@ -55,8 +71,8 @@ int main(void)
     }
 
     Camera cam = Camera(
-        //glm::vec3(0.0f, 1.0f, 3.0f), 
-        playerOrig,
+        glm::vec3(0.0f, 1.0f, 3.0f), 
+        //playerOrig,
         glm::vec3(0.0f, 0.0f, -1.0f), 
         glm::vec3(0.0f, 1.0f, 0.0f));
 

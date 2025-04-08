@@ -20,7 +20,8 @@ struct Image{
 
 class Texture {
     public:
-        void load_image(const char *path);
+        void load_image(const char* path);
+        void load_image_from_memory(unsigned char *data, int len);
         void create_texture();
 
         Texture(){

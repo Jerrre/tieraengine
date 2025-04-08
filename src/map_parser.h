@@ -12,11 +12,24 @@
 #include <vector>
 #include <algorithm>
 
-class Mesh;
-class Texture;
+#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
+
+const float EPSILON = 0.000001;
+
+struct ImageStruct {
+    unsigned char* data;
+    int width, height, nrChannels;
+};
+
+struct MeshStruct {
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> texCoords;
+    ImageStruct img;
+    std::string name;
+};
 
 //texName [Ux Uy Uz Uoff] [Vx Vy Vz Voff] rot Uscale Vscale
-struct TexInfo{
+struct TexInfo {
     std::string name;
     glm::vec3 u_axis;
     glm::vec3 v_axis;
@@ -27,17 +40,19 @@ struct TexInfo{
     int height;
     int width;
 };
-struct BrushFace{
+struct BrushFace {
     std::vector<glm::vec3> plane;
     TexInfo texInfo;
     std::vector<glm::vec3> polygon;
 };
 
-std::vector<Mesh> parse_map(const char* filePath, glm::vec3* playerOrig);
+void parse_map(const char* filePath, glm::vec3* playerOrig);
 
-int get_texture_index(std::vector<std::string> &texNames, std::vector<Mesh>& sortedMeshes, std::string textureName);
+void write_bin_file(std::vector<MeshStruct> meshStructs);
 
-void triangulate(BrushFace brushFace, Mesh &brushMesh);
+int get_texture_index(std::vector<std::string>& texNames, std::vector<MeshStruct>& sortedMeshes, std::string textureName);
+
+void triangulate(BrushFace brushFace, MeshStruct& brushMesh);
 
 glm::vec2 calc_UV_coord(glm::vec3 vertex, TexInfo texture);
 
@@ -48,8 +63,8 @@ bool vertex_inside_brush(std::vector<BrushFace> brushFaces, glm::vec3 vertex);
 glm::vec3 calc_plane_normal(std::vector<glm::vec3> plane);
 
 glm::vec3 get_plane_intersection(
-    std::vector<glm::vec3> plane1, 
-    std::vector<glm::vec3> plane2, 
+    std::vector<glm::vec3> plane1,
+    std::vector<glm::vec3> plane2,
     std::vector<glm::vec3> plane3,
     int* valid);
 
