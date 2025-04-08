@@ -1,7 +1,3 @@
-separate map parser from the actual engine
-map parser creates binary representation of the level geometry and creates the texture atlas
-engine reads the binaries and creates the level
-
 load each png file using stb
 sort the images in descending order by the img width
 allocate new memory block needed for the whole texture atlas

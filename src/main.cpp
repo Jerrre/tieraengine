@@ -3,7 +3,6 @@
 #include "texture.h"
 #include "shader.h"
 #include "camera.h"
-#include "map_parser.h"
 
 #include <iostream>
 #include <fstream>
@@ -21,8 +20,6 @@ int main(void)
 
     std::vector<Mesh> map;
     glm::vec3 playerOrig;
-
-    parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
 
     std::ifstream mapfile;
     mapfile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\map.dat", std::ios::binary | std::ios::in);
