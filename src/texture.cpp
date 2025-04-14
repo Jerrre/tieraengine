@@ -9,6 +9,16 @@ void Texture::load_image(const char *path)
         exit(EXIT_FAILURE);
     }
 }
+void Texture::load_image_from_memory(unsigned char* data, int len)
+{
+    stbi_set_flip_vertically_on_load(true);
+    img.data = stbi_load_from_memory(data, len, &img.width, &img.height, &img.nrChannels, 0);
+    if (!img.data) {
+        std::cout << "Failed to load texture " << std::endl;
+        exit(EXIT_FAILURE);
+    }
+}
+
 
 void Texture::create_texture()
 {

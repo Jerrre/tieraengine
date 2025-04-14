@@ -3,17 +3,63 @@
 #include "texture.h"
 #include "shader.h"
 #include "camera.h"
-#include "map_parser.h"
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+#include <stb_image.h>
+#include <stb_image_write.h>
 
 int main(void)
 {
     Render rd;
     rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
 
-
     std::vector<Mesh> map;
     glm::vec3 playerOrig;
-    map = parse_map("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.map", &playerOrig);
+
+    std::ifstream mapfile;
+    mapfile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.dat", std::ios::binary | std::ios::in);
+
+    int meshCount = 0;
+    mapfile.read(reinterpret_cast<char*>(&meshCount), sizeof(meshCount));
+
+    glm::vec3 vertex;
+    glm::vec2 texCoord;
+
+    for (int meshInd = 0; meshInd < meshCount; meshInd++){
+        Mesh newMesh;
+        map.push_back(newMesh);
+        int vertexCount;
+        mapfile.read(reinterpret_cast<char*>(&vertexCount), sizeof(vertexCount));
+
+        for (int vertInd = 0; vertInd < vertexCount; vertInd++) {
+            mapfile.read(reinterpret_cast<char*>(&vertex), sizeof(vertex));
+            mapfile.read(reinterpret_cast<char*>(&texCoord), sizeof(texCoord));
+            map[meshInd].vertices.push_back(vertex);
+            map[meshInd].texCoords.push_back(texCoord);
+        }
+
+        int texSize;
+        unsigned char* imgData;
+        mapfile.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+        imgData = (unsigned char*)malloc(texSize);
+        if (imgData == NULL) {
+            std::cout << "Malloc error:\n" << std::endl;
+        }
+        mapfile.read(reinterpret_cast<char*>(imgData), texSize);
+
+        map[meshInd].texture.load_image_from_memory(imgData, texSize);
+        map[meshInd].texture.create_texture();
+        map[meshInd].create_mesh();
+
+        free(imgData);
+
+    }
+    mapfile.close();
 
     playerOrig = playerOrig * glm::vec3(0.02);
 
@@ -22,8 +68,8 @@ int main(void)
     }
 
     Camera cam = Camera(
-        //glm::vec3(0.0f, 1.0f, 3.0f), 
-        playerOrig,
+        glm::vec3(0.0f, 1.0f, 3.0f), 
+        //playerOrig,
         glm::vec3(0.0f, 0.0f, -1.0f), 
         glm::vec3(0.0f, 1.0f, 0.0f));
 

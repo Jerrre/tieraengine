@@ -1,0 +1,32 @@
+load each png file using stb
+sort the images in descending order by the img width
+allocate new memory block needed for the whole texture atlas
+copy the image data to the newly allocated memory
+store the data to the same binary where the level geometry is
+
+binary need to have all the required entity information embedded (position of objects etc)
+
+create one big VBO for the whole map -> only 1 draw call needed
+use subimage property to access the needed part of the texture -> bind only 1 texture
+
+example:
+images, data not necessarily in sequential order
+xxxxx  zzz  yyyyy  cc
+xxxxx  zzz  yyyyy  cc
+xxxxx       yyyyy
+
+images organized:
+xxxxx
+xxxxx
+xxxxx
+yyyyy
+yyyyy
+yyyyy
+zzz
+zzz
+cc
+cc
+->
+xxxxx xxxxx xxxxx yyyyy yyyyy yyyyy zzz zzz cc cc
+
+frustum culling
