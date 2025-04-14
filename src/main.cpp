@@ -13,6 +13,12 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+struct Sphere
+{
+    glm::vec3 pos;
+    unsigned int rad;
+};
+
 int main(void)
 {
     Render rd;
@@ -63,6 +69,16 @@ int main(void)
 
     playerOrig = playerOrig * glm::vec3(0.02);
 
+
+    Sphere sphere1;
+    sphere1.pos = glm::vec3(0, 0, 0);
+    sphere1.rad = 2;
+
+    Sphere sphere2;
+    sphere2.pos = glm::vec3(0, 0, 0);
+    sphere2.rad = 2;
+    
+
     for (int m = 0; m < map.size(); m++) {
         map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));
     }
@@ -83,6 +99,19 @@ int main(void)
         rd.startDraw();
         rd.clear_background(rd.BLACK);
         cam.update(rd.getMouseOffset());
+
+        glm::vec3 pos = { 0,0,0 };
+        pos.y = 10*glm::sin(glfwGetTime());
+        sphere2.pos = pos;
+        float dist = glm::length(sphere1.pos - sphere2.pos);
+        float collDist = sphere1.rad + sphere2.rad;
+        if (dist < collDist) {
+            std::cout << "Colliding" << std::endl;
+        }
+        else {
+            std::cout << "Not colliding" << std::endl;
+        }
+
 
         if (rd.processInput() == UP)
             cam.position += cam.speed * cam.front * rd.deltaTime;
