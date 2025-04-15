@@ -18,6 +18,11 @@ struct Sphere
     glm::vec3 pos;
     unsigned int rad;
 };
+struct Box
+{
+    glm::vec3 min;
+    glm::vec3 max;
+};
 
 int main(void)
 {
@@ -77,7 +82,25 @@ int main(void)
     Sphere sphere2;
     sphere2.pos = glm::vec3(0, 0, 0);
     sphere2.rad = 2;
+
+    Box box1;
+    box1.min = glm::vec3(0, 0, 0);
+    box1.max = glm::vec3(2, 2, 2);
     
+    Box box2;
+    box2.min = glm::vec3(-1, -1, -1);
+    box2.max = glm::vec3(1, 1, 1);
+
+
+    if (box1.min.x <= box2.max.x &&
+        box1.max.x >= box2.min.x &&
+        box1.min.y <= box2.max.y &&
+        box1.max.y >= box2.min.y &&
+        box1.min.z <= box2.max.z &&
+        box1.max.z >= box2.min.z) {
+        std::cout << "colliding" << std::endl;
+    }
+
 
     for (int m = 0; m < map.size(); m++) {
         map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));
@@ -99,19 +122,6 @@ int main(void)
         rd.startDraw();
         rd.clear_background(rd.BLACK);
         cam.update(rd.getMouseOffset());
-
-        glm::vec3 pos = { 0,0,0 };
-        pos.y = 10*glm::sin(glfwGetTime());
-        sphere2.pos = pos;
-        float dist = glm::length(sphere1.pos - sphere2.pos);
-        float collDist = sphere1.rad + sphere2.rad;
-        if (dist < collDist) {
-            std::cout << "Colliding" << std::endl;
-        }
-        else {
-            std::cout << "Not colliding" << std::endl;
-        }
-
 
         if (rd.processInput() == UP)
             cam.position += cam.speed * cam.front * rd.deltaTime;
