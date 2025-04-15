@@ -21,5 +21,19 @@ enum Input{
     LEFT,
     RIGHT
 };
+enum ColliderType {
+    SPHERE,
+    BOX
+};
+struct Sphere
+{
+    glm::vec3 pos;
+    unsigned int rad;
+};
+struct Box
+{
+    glm::vec3 min;
+    glm::vec3 max;
+};
 
 #endif GLOBAL_H

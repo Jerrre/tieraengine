@@ -3,6 +3,7 @@
 #include "texture.h"
 #include "shader.h"
 #include "camera.h"
+#include "physics.h"
 
 #include <iostream>
 #include <fstream>
@@ -12,17 +13,6 @@
 
 #include <stb_image.h>
 #include <stb_image_write.h>
-
-struct Sphere
-{
-    glm::vec3 pos;
-    unsigned int rad;
-};
-struct Box
-{
-    glm::vec3 min;
-    glm::vec3 max;
-};
 
 int main(void)
 {
@@ -78,28 +68,19 @@ int main(void)
     Sphere sphere1;
     sphere1.pos = glm::vec3(0, 0, 0);
     sphere1.rad = 2;
-
     Sphere sphere2;
-    sphere2.pos = glm::vec3(0, 0, 0);
+    sphere2.pos = glm::vec3(0, 5, 0);
     sphere2.rad = 2;
 
     Box box1;
     box1.min = glm::vec3(0, 0, 0);
     box1.max = glm::vec3(2, 2, 2);
-    
     Box box2;
-    box2.min = glm::vec3(-1, -1, -1);
-    box2.max = glm::vec3(1, 1, 1);
+    box2.min = glm::vec3(3, 3, 3);
+    box2.max = glm::vec3(4, 4, 4);
 
-
-    if (box1.min.x <= box2.max.x &&
-        box1.max.x >= box2.min.x &&
-        box1.min.y <= box2.max.y &&
-        box1.max.y >= box2.min.y &&
-        box1.min.z <= box2.max.z &&
-        box1.max.z >= box2.min.z) {
-        std::cout << "colliding" << std::endl;
-    }
+    std::cout << is_aabb_colliding(box1, box2) << std::endl;
+    std::cout << is_sphere_colliding(sphere1, sphere2) << std::endl;
 
 
     for (int m = 0; m < map.size(); m++) {
