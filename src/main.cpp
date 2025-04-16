@@ -82,7 +82,7 @@ int main(void)
     }
 
     Camera cam = Camera(
-        glm::vec3(0.0f, 1.0f, 3.0f), 
+        glm::vec3(-8.0f, 0.5f, 0.0f), 
         //playerOrig,
         glm::vec3(0.0f, 0.0f, -1.0f), 
         glm::vec3(0.0f, 1.0f, 0.0f));
@@ -97,24 +97,30 @@ int main(void)
     playerCollider.min = cam.position;
     playerCollider.max = playerCollider.min + glm::vec3(colliderSize);
 
+    bool colliding = false;
     while (!rd.window_should_close())
     {
         rd.startDraw();
         rd.clear_background(rd.BLACK);
         cam.update(rd.getMouseOffset());
+        
 
-        if (rd.processInput() == UP)
-            cam.position += cam.speed * cam.front * rd.deltaTime;
-        if (rd.processInput() == DOWN)
-            cam.position -= cam.speed * cam.front * rd.deltaTime;
-        if (rd.processInput() == LEFT)
-            cam.position -= glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
-        if (rd.processInput() == RIGHT)
-            cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
+        if (colliding) {
+            cam.position -= cam.front*glm::vec3(0.03);
+        }
+        else {
+            if (rd.processInput() == UP)
+                cam.position += cam.speed * cam.front * rd.deltaTime;
+            if (rd.processInput() == DOWN)
+                cam.position -= cam.speed * cam.front * rd.deltaTime;
+            if (rd.processInput() == LEFT)
+                cam.position -= glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
+            if (rd.processInput() == RIGHT)
+                cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
+        }
         
         playerCollider.min = cam.position;
         playerCollider.max = playerCollider.min + glm::vec3(colliderSize);
-        bool colliding = false;
         for (int obj = 0; obj < colliders.size(); obj++) {
             if (is_aabb_colliding(playerCollider, colliders[obj])) {
                 colliding = true;
@@ -124,7 +130,6 @@ int main(void)
                 colliding = false;
             }
         }
-        std::cout << colliding << std::endl;
 
         for (int m = 0; m < map.size(); m++){
             map[m].draw(shader, rd.WHITE, cam.view, proj);
