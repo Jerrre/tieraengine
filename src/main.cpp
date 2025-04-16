@@ -14,12 +14,16 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
+
 int main(void)
 {
     Render rd;
     rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
 
     std::vector<Mesh> map;
+    std::vector<Box> colliders;
     glm::vec3 playerOrig;
 
     std::ifstream mapfile;
@@ -33,15 +37,14 @@ int main(void)
 
     for (int meshInd = 0; meshInd < meshCount; meshInd++){
         Mesh newMesh;
-        map.push_back(newMesh);
         int vertexCount;
         mapfile.read(reinterpret_cast<char*>(&vertexCount), sizeof(vertexCount));
 
         for (int vertInd = 0; vertInd < vertexCount; vertInd++) {
             mapfile.read(reinterpret_cast<char*>(&vertex), sizeof(vertex));
             mapfile.read(reinterpret_cast<char*>(&texCoord), sizeof(texCoord));
-            map[meshInd].vertices.push_back(vertex);
-            map[meshInd].texCoords.push_back(texCoord);
+            newMesh.vertices.push_back(vertex);
+            newMesh.texCoords.push_back(texCoord);
         }
 
         int texSize;
@@ -53,38 +56,29 @@ int main(void)
         }
         mapfile.read(reinterpret_cast<char*>(imgData), texSize);
 
-        map[meshInd].texture.load_image_from_memory(imgData, texSize);
-        map[meshInd].texture.create_texture();
-        map[meshInd].create_mesh();
+        newMesh.texture.load_image_from_memory(imgData, texSize);
+        newMesh.texture.create_texture();
+        newMesh.create_mesh();
+        map.push_back(newMesh);
 
         free(imgData);
-
     }
+    int colliderCount;
+    mapfile.read(reinterpret_cast<char*>(&colliderCount), sizeof(colliderCount));
+    for (int box = 0; box < colliderCount; box++) {
+        Box newCollider;
+        mapfile.read(reinterpret_cast<char*>(&newCollider), sizeof(Box));
+        newCollider.min = newCollider.min * glm::vec3(0.02);
+        newCollider.max = newCollider.max * glm::vec3(0.02);
+        colliders.push_back(newCollider);
+    }
+
     mapfile.close();
 
     playerOrig = playerOrig * glm::vec3(0.02);
 
-
-    Sphere sphere1;
-    sphere1.pos = glm::vec3(0, 0, 0);
-    sphere1.rad = 2;
-    Sphere sphere2;
-    sphere2.pos = glm::vec3(0, 5, 0);
-    sphere2.rad = 2;
-
-    Box box1;
-    box1.min = glm::vec3(0, 0, 0);
-    box1.max = glm::vec3(2, 2, 2);
-    Box box2;
-    box2.min = glm::vec3(3, 3, 3);
-    box2.max = glm::vec3(4, 4, 4);
-
-    std::cout << is_aabb_colliding(box1, box2) << std::endl;
-    std::cout << is_sphere_colliding(sphere1, sphere2) << std::endl;
-
-
     for (int m = 0; m < map.size(); m++) {
-        map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));
+        map[m].model = glm::scale(map[m].model, glm::vec3(0.02));
     }
 
     Camera cam = Camera(
@@ -97,6 +91,11 @@ int main(void)
 
     Shader shader;
     shader.create_shader();
+
+    Box playerCollider;
+    float colliderSize = 0.6;
+    playerCollider.min = cam.position;
+    playerCollider.max = playerCollider.min + glm::vec3(colliderSize);
 
     while (!rd.window_should_close())
     {
@@ -113,6 +112,20 @@ int main(void)
         if (rd.processInput() == RIGHT)
             cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         
+        playerCollider.min = cam.position;
+        playerCollider.max = playerCollider.min + glm::vec3(colliderSize);
+        bool colliding = false;
+        for (int obj = 0; obj < colliders.size(); obj++) {
+            if (is_aabb_colliding(playerCollider, colliders[obj])) {
+                colliding = true;
+                break;
+            }
+            else {
+                colliding = false;
+            }
+        }
+        std::cout << colliding << std::endl;
+
         for (int m = 0; m < map.size(); m++){
             map[m].draw(shader, rd.WHITE, cam.view, proj);
         }
