@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "physics.h"
+#include "body.h"
 
 #include <iostream>
 #include <fstream>
@@ -22,8 +23,7 @@ int main(void)
     Render rd;
     rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
 
-    std::vector<Mesh> map;
-    std::vector<Box> colliders;
+    Body map;
     glm::vec3 playerOrig;
 
     std::ifstream mapfile;
@@ -59,7 +59,7 @@ int main(void)
         newMesh.texture.load_image_from_memory(imgData, texSize);
         newMesh.texture.create_texture();
         newMesh.create_mesh();
-        map.push_back(newMesh);
+        map.meshes.push_back(newMesh);
 
         free(imgData);
     }
@@ -68,18 +68,14 @@ int main(void)
     for (int box = 0; box < colliderCount; box++) {
         Box newCollider;
         mapfile.read(reinterpret_cast<char*>(&newCollider), sizeof(Box));
-        newCollider.min = newCollider.min * glm::vec3(0.02);
-        newCollider.max = newCollider.max * glm::vec3(0.02);
-        colliders.push_back(newCollider);
+        map.colliders.push_back(newCollider);
     }
 
     mapfile.close();
 
     playerOrig = playerOrig * glm::vec3(0.02);
 
-    for (int m = 0; m < map.size(); m++) {
-        map[m].model = glm::scale(map[m].model, glm::vec3(0.02));
-    }
+    map.set_scale(0.02);
 
     Camera cam = Camera(
         glm::vec3(-8.0f, 0.5f, 0.0f), 
@@ -118,22 +114,21 @@ int main(void)
             if (rd.processInput() == RIGHT)
                 cam.position += glm::normalize(glm::cross(cam.front, cam.up)) * cam.speed * rd.deltaTime;
         }
-        
-        playerCollider.min = cam.position;
-        playerCollider.max = playerCollider.min + glm::vec3(colliderSize);
-        for (int obj = 0; obj < colliders.size(); obj++) {
-            if (is_aabb_colliding(playerCollider, colliders[obj])) {
-                colliding = true;
-                break;
-            }
-            else {
-                colliding = false;
-            }
-        }
+        //
+        //playerCollider.min = cam.position;
+        //playerCollider.max = playerCollider.min + glm::vec3(colliderSize);
+        //for (int obj = 0; obj < colliders.size(); obj++) {
+        //    if (is_aabb_colliding(playerCollider, colliders[obj])) {
+        //        colliding = true;
+        //        break;
+        //    }
+        //    else {
+        //        colliding = false;
+        //    }
+        //}
+        //
+        map.draw(shader, rd.WHITE, cam.view, proj);
 
-        for (int m = 0; m < map.size(); m++){
-            map[m].draw(shader, rd.WHITE, cam.view, proj);
-        }
         rd.end_draw();    
     }
     rd.close_window();
