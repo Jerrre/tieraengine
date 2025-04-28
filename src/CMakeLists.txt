@@ -23,6 +23,7 @@ set( fpsgl_source
         camera.cpp
         physics.cpp
         body.cpp
+        game_object.cpp
         )
 
 add_executable( fpsgl ${fpsgl_source} )

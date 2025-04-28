@@ -14,18 +14,13 @@
 
 #include "global.h"
 
-class Mesh;
-class Shader;
-
 class Body {
 public:
     Body();
-    glm::vec3 position;
-    std::vector<Mesh> meshes;
+    glm::vec3 position = { 0,0,0 };
     std::vector<Box> colliders;
-    void set_scale(float newScale);
-    void draw(Shader& shader, Color color, glm::mat4 view, glm::mat4 projection);
+    void update(glm::vec3 new_position);
+    float collider_size = 0;
 private:
-    float scale = 1.0;
 };
 #endif BODY_H

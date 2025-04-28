@@ -1,3 +1,24 @@
+Engine architecture
+game object
+	pos (reflect to all objects)
+	scale (reflect to all objects)
+	mesh
+	body index (reference to the bodies vector in physics engine)
+	update (reflect to all objects)
+	draw (reflect to needed objects)
+
+mesh
+	vertices
+	indices
+	normals
+	texcoords
+
+body
+	colliders
+
+
+
+
 load each png file using stb
 sort the images in descending order by the img width
 allocate new memory block needed for the whole texture atlas
