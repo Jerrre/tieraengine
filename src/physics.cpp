@@ -25,7 +25,7 @@ bool Physics::static_collision(Body body)
 {
     bool colliding = false;
     for (int i = 0; i < static_box_colliders->size(); i++) {
-        if (is_aabb_colliding(body.colliders[0], static_box_colliders->at(i))) { // assume the moving body has only one collidere
+        if (is_aabb_colliding(body.colliders[0], static_box_colliders->at(i))) { // assume the moving body has only one collider
             colliding = true;
             break;
         }

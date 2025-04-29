@@ -114,6 +114,7 @@ int main(void)
         else {
             if (rd.processInput() == UP)
                 cam.position += cam.speed * cam.front * rd.deltaTime;
+                //cam.position.y = 0.5;
             if (rd.processInput() == DOWN)
                 cam.position -= cam.speed * cam.front * rd.deltaTime;
             if (rd.processInput() == LEFT)

@@ -16,8 +16,30 @@ mesh
 body
 	colliders
 
-
-
+physics
+	visual debugger
+		draw colliders
+		data dump into a file
+	moving (player and enemies)
+		walking
+			move and slide
+				dont get stuck on the walls
+				push bodies along the wall
+			go up the stairs and ladders
+				ramps for ladders
+		gravity
+			fall from the edges
+			jumping
+		dont fall through floor
+			detect on floor somehow
+	shooting / melee
+		hit enemies with a melee weapon
+		shoot bullets
+	collision
+		binary partition
+		detection
+			aabb -> gjk
+		resolution
 
 load each png file using stb
 sort the images in descending order by the img width
