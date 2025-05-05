@@ -16,6 +16,8 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+#include <ode/ode.h>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
@@ -27,6 +29,10 @@ int main(void)
     Physics phy;
 
     GameObject map;
+
+    dWorldID worldID = dWorldCreate();
+
+    std::cout << worldID << std::endl;
 
     /* Read and parse map data */
     std::ifstream mapfile;
@@ -131,6 +137,9 @@ int main(void)
 
         rd.end_draw();    
     }
+
+    dWorldDestroy(worldID);
+
     rd.close_window();
 
     return 0;
