@@ -22,7 +22,7 @@ int main(void)
     glm::vec3 playerOrig;
 
     std::ifstream mapfile;
-    mapfile.open("C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\space01.dat", std::ios::binary | std::ios::in);
+    mapfile.open("..\\resources\\space01.dat", std::ios::binary | std::ios::in);
 
     int meshCount = 0;
     mapfile.read(reinterpret_cast<char*>(&meshCount), sizeof(meshCount));
