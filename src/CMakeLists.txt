@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 3.15...3.31 )
 
 project( fpsgl )
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 find_package(OpenGL REQUIRED)
 
