@@ -35,4 +35,11 @@ target_link_libraries(tieraengine
   glm
 )
 
+# Example app
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+  add_executable(main main.cpp)
+  target_link_libraries(main PRIVATE tieraengine)
+  target_include_directories(main PUBLIC ${PROJECT_SOURCE_DIR}/include)
+endif()
+
 
