@@ -1,17 +1,9 @@
-#include "render.h"
-#include "mesh.h"
-#include "texture.h"
-#include "shader.h"
-#include "camera.h"
-
+#include "tieraengine.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <algorithm>
-
-#include <stb_image.h>
-#include <stb_image_write.h>
 
 int main(void)
 {
