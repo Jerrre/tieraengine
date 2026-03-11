@@ -2,6 +2,8 @@ cmake_minimum_required( VERSION 3.15...3.31 )
 
 project( tieraengine )
 
+add_compile_definitions(PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
+
 find_package(OpenGL REQUIRED)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
