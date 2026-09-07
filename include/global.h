@@ -4,9 +4,6 @@
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1080;
 
-const std::string globTexPath = "C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\textures\\";
-const std::string globMapPath = "C:\\Users\\jp-om\\Documents\\repos\\fpsgl\\resources\\";
-
 struct Color{
     float r;
     float g;
@@ -22,4 +19,4 @@ enum Input{
     RIGHT
 };
 
-#endif GLOBAL_H
+#endif
