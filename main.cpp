@@ -8,10 +8,9 @@
 int main(void)
 {
     Render rd;
-    rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "fpsgl");
+    rd.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
 
     std::vector<Mesh> map;
-    glm::vec3 playerOrig;
 
     std::ifstream mapfile;
     mapfile.open(PROJECT_ROOT"/resources/space01.dat", std::ios::binary | std::ios::in);
@@ -53,16 +52,13 @@ int main(void)
     }
     mapfile.close();
 
-    playerOrig = playerOrig * glm::vec3(0.02);
-
     for (int m = 0; m < map.size(); m++) {
         map[m].model = glm::scale(map[m].model, glm::vec3(0.02, 0.02, 0.02));
     }
 
     Camera cam = Camera(
-        glm::vec3(0.0f, 1.0f, 3.0f), 
-        //playerOrig,
-        glm::vec3(0.0f, 0.0f, -1.0f), 
+        glm::vec3(0.0f, 1.0f, 1.0f),
+        glm::vec3(0.0f, 0.0f, -1.0f),
         glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::mat4 proj = glm::perspective(glm::radians(cam.fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);

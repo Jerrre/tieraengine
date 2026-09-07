@@ -31,4 +31,4 @@ class Mesh {
     private: 
         unsigned int VBO, VAO, EBO;
 };
-#endif MESH_H
+#endif
