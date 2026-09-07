@@ -1,8 +1,11 @@
+
 # Experimental 3D Rendering Engine & TrenchBroom Pipeline
 
 A lightweight, low-level 3D graphics rendering engine written from scratch in C++ and OpenGL. As of now intented to use together with my TrenchBroom mapParser. The example implementation reads a map data binary created with the mapParser and renders the texturized level geometry.
 
 https://github.com/Jerrre/mapParser
+
+<img width="372" height="226" alt="render - Trim (1)" src="https://github.com/user-attachments/assets/20e45223-86e9-4cae-928c-7cc426322f76" />
 
 ---
 
